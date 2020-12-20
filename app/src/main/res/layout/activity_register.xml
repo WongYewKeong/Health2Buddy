@@ -60,9 +60,11 @@
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
-                            android:id="@+id/editTextName"
+                            android:id="@+id/et_name"
                             style="@style/modifiedEditText"
-                            android:hint="Name"
+                            android:drawableLeft="@drawable/ic_baseline_account_circle_24"
+                            android:drawablePadding="5dp"
+                            android:hint="Username"
                             android:inputType="textPersonName"
                             android:maxLines="1"
                             android:textSize="14sp" />
@@ -74,23 +76,12 @@
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
-                            android:id="@+id/editTextEmail"
+                            android:id="@+id/et_email"
                             style="@style/modifiedEditText"
+                            android:drawableLeft="@drawable/ic_message"
+                            android:drawablePadding="5dp"
                             android:hint="Email"
                             android:inputType="textEmailAddress"
-                            android:maxLines="1"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputMobile"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
-
-                        <EditText
-                            android:id="@+id/editTextMobile"
-                            style="@style/modifiedEditText"
-                            android:hint="Mobile Number"
-                            android:inputType="phone"
                             android:maxLines="1"
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -98,19 +89,38 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputPassword"
                         style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        app:passwordToggleEnabled="true">
 
                         <EditText
-                            android:id="@+id/editTextPassword"
+                            android:id="@+id/et_password"
                             style="@style/modifiedEditText"
+                            android:drawableStart="@drawable/ic_password1"
+                            android:drawablePadding="5dp"
                             android:hint="Password"
                             android:inputType="textPassword"
                             android:maxLines="1"
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputMobile"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+
+                        <EditText
+                            android:id="@+id/et_mobile"
+                            style="@style/modifiedEditText"
+                            android:drawableStart="@drawable/ic_baseline_contact_phone_24"
+                            android:drawablePadding="5dp"
+                            android:hint="Mobile Number"
+                            android:inputType="phone"
+                            android:maxLines="1"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-                        android:id="@+id/cirRegisterButton"
+                        android:id="@+id/btn_register"
                         style="@style/loginButton"
                         app:spinning_bar_width="4dp"
                         app:spinning_bar_color="#FFF"
@@ -151,11 +161,11 @@
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Use other Methods"
                     android:layout_weight="6"
-                    android:textSize="12sp"
-                    android:textAlignment="center"/>
+                    android:text="Alternative Methods"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <View
                     android:layout_width="0dp"
@@ -171,15 +181,19 @@
                 android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="30dp">
+
                 <ImageView
+                    android:id="@+id/fb_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_facebook"/>
+                    android:src="@drawable/ic_facebook" />
+
                 <ImageView
+                    android:id="@+id/google_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_google_plus"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/common_google_signin_btn_icon_light" />
             </LinearLayout>
 
 
