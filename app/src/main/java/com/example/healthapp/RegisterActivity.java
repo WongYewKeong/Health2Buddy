@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,9 +17,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
@@ -28,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected CircularProgressButton btnRegister;
     private FirebaseAuth firebaseAuth;
     private ImageView fbSignup,googleSignup;
+
 
 
     @Override
@@ -43,6 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
         fbSignup=findViewById(R.id.fb_signup);
         googleSignup=findViewById(R.id.google_signup);
         firebaseAuth=FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +65,11 @@ public class RegisterActivity extends AppCompatActivity {
                 String username=etName.getText().toString().trim();
                 String phone=etMobile.getText().toString().trim();
 
+
                 btnRegister.startAnimation();
 
-                if(password.isEmpty()||email.isEmpty()||username.isEmpty()||phone.isEmpty()){
+
+                if(password.isEmpty()||email.isEmpty()||username.isEmpty()){
                     AlertDialog.Builder builder=new AlertDialog.Builder(RegisterActivity.this);
                     builder.setMessage("Please enter all of the registration information").setTitle("Warning").setPositiveButton("OK",null);
 
@@ -63,15 +78,45 @@ public class RegisterActivity extends AppCompatActivity {
                     btnRegister.revertAnimation();
 
                 }else{
+
+
+
                     firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if( task.isSuccessful()){
-                                btnRegister.doneLoadingAnimation(R.color.green, null);
+
+
                                 Toast.makeText(RegisterActivity.this,"Registration success",Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                                String userID =firebaseAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference=db.collection("users").document(userID);
+                                Map<String,Object>user=new HashMap<>();
+                                user.put("Username",username);
+                                user.put("Email",email);
+                                user.put("Phone Number",phone);
+
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                                //btnRegister.doneLoadingAnimation(R.color.green, null);
+                                btnRegister.stopAnimation();
+                                Intent intent=new Intent(RegisterActivity.this,MenuActivity.class);
+
                                 startActivity(intent);
+
+
+
                             }else{
+
+
                                 Toast.makeText(RegisterActivity.this,"This email is already exist with an account", Toast.LENGTH_SHORT).show();
                                 btnRegister.revertAnimation();
                             }
