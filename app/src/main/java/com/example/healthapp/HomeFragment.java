@@ -18,22 +18,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.widget.Toast.makeText;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
 
-    private TextView stepcount,calories,distance,user,weight;
+    private TextView stepcount,calories,distance,user,weight,height,Bmi;
     private SensorManager sensorManager;
     private Sensor stepcounter;
     private boolean isSensorPresent;
-    private Button btnEditWeight;
+    private Button btnEditWeight,btnEditHeight;
     int stepCount=0;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore db;
+    int weightnum,heightnum,bmi;
 
 
 
@@ -50,13 +64,17 @@ public class HomeFragment extends Fragment implements SensorEventListener {
        calories=root.findViewById(R.id.tv_calories);
        distance=root.findViewById(R.id.tv_distance);
        btnEditWeight=root.findViewById(R.id.btn_edit_weight);
+       btnEditHeight=root.findViewById(R.id.btn_edit_height);
        weight=root.findViewById(R.id.tv_weight);
+       height=root.findViewById(R.id.tv_height);
+       Bmi=root.findViewById(R.id.tv_bmi);
        user=root.findViewById(R.id.username);
        firebaseAuth=FirebaseAuth.getInstance();
-       FirebaseFirestore db=FirebaseFirestore.getInstance();
+       db=FirebaseFirestore.getInstance();
        String userId=firebaseAuth.getCurrentUser().getUid();
 
 
+        DocumentReference documentReference=db.collection("users").document(userId);
 
 
 
@@ -76,7 +94,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
            public void onClick(View view) {
 
                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-               builder.setTitle("Enter your weight");
+               builder.setTitle("Enter your weight (in Kg)");
 
 
                final EditText input = new EditText(getContext());
@@ -88,17 +106,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 
 
-                   private int which;
-                   private DialogInterface dialog;
-
                    @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       this.dialog = dialog;
-                       this.which = which;
-                       weight.setText(input.getText().toString()+" Kg");
+                           public void onClick(DialogInterface dialog, int which) {
 
-                   }
-               });
+
+
+                               documentReference.update("Weight", input.getText().toString() );
+                           }
+                       });
                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -109,6 +124,60 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                builder.show();
            }
        });
+
+       btnEditHeight.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+               builder.setTitle("Enter your height (in Cm)");
+
+
+               final EditText height = new EditText(getContext());
+
+               height.setInputType(InputType.TYPE_CLASS_NUMBER);
+               builder.setView(height);
+
+
+               builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+
+                   @Override
+                           public void onClick(DialogInterface dialog, int which) {
+
+                       documentReference.update("Height", height.getText().toString() );
+                           }
+                       });
+
+               builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       dialog.cancel();
+                   }
+               });
+               AlertDialog dialog=builder.create();
+               builder.show();
+
+           }
+       });
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        weight.setText(value.getString("Weight") + " Kg");
+                        height.setText(value.getString("Height") + " Cm");
+                        user.setText(value.getString("Username"));
+
+
+
+
+
+            }
+
+        });
+       // weightnum= Integer.parseInt(weight.getText().toString());
+        //heightnum= Integer.parseInt(height.getText().toString())/100;
+        //bmi=weightnum/(heightnum*heightnum);
+       // Bmi.setText(String.valueOf(bmi));
 
        return root;
     }

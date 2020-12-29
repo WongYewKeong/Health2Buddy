@@ -37,12 +37,12 @@
 
             <TextView
                 android:id="@+id/username"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:fontFamily="cursive"
-                android:textColor="#000"
+                android:textColor="#673AB7"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
@@ -122,7 +122,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
-                    android:text="Today's Burnt Calories" />
+                    android:text="Today's Burnt Calories"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -157,7 +158,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
-                    android:text="Today's Distance Covered" />
+                    android:text="Today's Distance Covered"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -184,7 +186,6 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/weight"
                     android:drawablePadding="10dp"
-                    android:text="No data"
                     android:textColor="#3D6CFC"
                     android:textSize="25sp" />
 
@@ -192,7 +193,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
-                    android:text="Weight" />
+                    android:text="Weight"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -239,7 +241,6 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/height"
                     android:drawablePadding="10dp"
-                    android:text="No data"
                     android:textColor="#3D6CFC"
                     android:textSize="25sp" />
 
@@ -247,7 +248,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
-                    android:text="Height" />
+                    android:text="Height"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -258,7 +260,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btn_edit_weight"
+                    android:id="@+id/btn_edit_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -269,6 +271,42 @@
                     android:text="Edit"
                     android:textAlignment="center"
                     app:cornerRadius="10dp" />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+
+                <TextView
+                    android:id="@+id/tv_bmi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/bmi"
+                    android:drawablePadding="10dp"
+                    android:text="0"
+                    android:textColor="#3D6CFC"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="45dp"
+                    android:text="BMI"
+                    android:textSize="18sp" />
+
             </LinearLayout>
 
 
