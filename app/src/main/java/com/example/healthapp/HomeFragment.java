@@ -100,8 +100,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 builder.setNegativeButton("Cancel", null);
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-            } else {
-                Toast.makeText(getActivity(), "Permission is granted", Toast.LENGTH_SHORT).show();
             }
         }
 
