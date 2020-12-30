@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                Toast.makeText(getContext(), "Permission is granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Permission is granted", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -119,11 +119,11 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter your weight (in Kg)");
 
 
-                final EditText input = new EditText(getContext());
+                final EditText input = new EditText(getActivity());
 
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(input);
@@ -157,11 +157,11 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         btnEditHeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter your height (in Cm)");
 
 
-                final EditText height = new EditText(getContext());
+                final EditText height = new EditText(getActivity());
 
                 height.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(height);
@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         information.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.Info).setTitle("Information").setPositiveButton("OK",null);
 
                 AlertDialog dialog=builder.create();
