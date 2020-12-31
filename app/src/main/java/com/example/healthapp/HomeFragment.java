@@ -1,6 +1,7 @@
 package com.example.healthapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +43,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.widget.Toast.makeText;
 
@@ -133,13 +135,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (!input.getText().toString().isEmpty()) {
 
-                            documentReference.update("Weight", input.getText().toString());
-                        } else {
-                            documentReference.update("Weight", "0");
+                            if (!input.getText().toString().isEmpty()) {
+
+                                documentReference.update("Weight", input.getText().toString());
+                            } else {
+                                documentReference.update("Weight", "0");
+                            }
                         }
-                    }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -192,6 +195,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error!=null){
+                    return;
+                }
 
                 weight.setText(value.getString("Weight") + " Kg");
                 height.setText(value.getString("Height") + " Cm");
@@ -206,20 +212,21 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 Bmi.setText(String.valueOf(df.format(bmi)) + " Kg/m\u00B2");
                 documentReference.update("BMI", String.valueOf(df.format(bmi)));
 
-                if (bmi < 18.5) {
-                    bmiStatus.setText("Underweight");
-                    bmiStatus.setBackgroundColor(getResources().getColor(R.color.underweight));
-                } else if (bmi >= 18.5 && bmi < 25) {
-                    bmiStatus.setText("Normal");
-                    bmiStatus.setBackgroundColor(getResources().getColor(R.color.green));
-                } else if (bmi >= 25 && bmi < 30) {
-                    bmiStatus.setText("Overweight");
-                    bmiStatus.setBackgroundColor(getResources().getColor(R.color.overweight));
-                } else {
-                    bmiStatus.setText("Obese");
-                    bmiStatus.setBackgroundColor(getResources().getColor(R.color.obese));
+                if(getActivity()!=null&&isAdded()) {
+                    if (bmi < 18.5) {
+                        bmiStatus.setText("Underweight");
+                        bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.underweight));
+                    } else if (bmi >= 18.5 && bmi < 25) {
+                        bmiStatus.setText("Normal");
+                        bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.green));
+                    } else if (bmi >= 25 && bmi < 30) {
+                        bmiStatus.setText("Overweight");
+                        bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.overweight));
+                    } else {
+                        bmiStatus.setText("Obese");
+                        bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.obese));
+                    }
                 }
-
 
             }
 
