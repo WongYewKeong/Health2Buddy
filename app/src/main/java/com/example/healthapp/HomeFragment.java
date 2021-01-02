@@ -142,7 +142,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                                 documentReference.update("Weight", input.getText().toString());
                             } else {
-                                documentReference.update("Weight", "0");
+                                dialog.cancel();
                             }
                         }
                 });
@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                         if (!height.getText().toString().isEmpty()) {
                             documentReference.update("Height", height.getText().toString());
                         }else{
-                            documentReference.update("Height", "0");
+                            dialog.cancel();
                         }
                     }
                 });
