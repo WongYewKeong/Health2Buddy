@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -87,6 +88,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
         DocumentReference documentReference = db.collection("users").document(userId);
+        documentReference.update("Weight","0");
+        documentReference.update("Height","0");
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION)) {
@@ -210,6 +213,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
                 Bmi.setText(String.valueOf(df.format(bmi)) + " Kg/m\u00B2");
+
                 documentReference.update("BMI", String.valueOf(df.format(bmi)));
 
                 if(getActivity()!=null&&isAdded()) {
@@ -222,9 +226,12 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     } else if (bmi >= 25 && bmi < 30) {
                         bmiStatus.setText("Overweight");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.overweight));
-                    } else {
+                    } else if(bmi>=30){
                         bmiStatus.setText("Obese");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.obese));
+                    }else{
+                        bmiStatus.setText("No data");
+                        bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.teal_200));
                     }
                 }
 
