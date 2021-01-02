@@ -88,8 +88,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
         DocumentReference documentReference = db.collection("users").document(userId);
-        documentReference.update("Weight","0");
-        documentReference.update("Height","0");
+
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION)) {
