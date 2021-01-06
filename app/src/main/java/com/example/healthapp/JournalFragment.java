@@ -81,30 +81,7 @@ public class JournalFragment extends Fragment {
         myJournalDB = Room.databaseBuilder(getContext(), MyJournalDB.class, "MyJournalDB").build();
 
 
-        Button signout=root.findViewById(R.id.btn_signout);
-        firebaseAuth=FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        signInClient = GoogleSignIn.getClient(getContext(), gso);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-                LoginManager.getInstance().logOut();
-                signInClient.signOut().addOnCompleteListener( new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent intent=new Intent(getActivity(),LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                });
 
-            }
-        });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
