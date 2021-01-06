@@ -1,0 +1,46 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a9086847e334c7f0d54a447395f87ad1",
+    "entities": [
+      {
+        "tableName": "journals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`journal_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `journal_title` TEXT NOT NULL, `journal_description` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "journalID",
+            "columnName": "journal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "journalTitle",
+            "columnName": "journal_title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "journalDescription",
+            "columnName": "journal_description",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "journal_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9086847e334c7f0d54a447395f87ad1')"
+    ]
+  }
+}
