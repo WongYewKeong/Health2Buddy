@@ -41,20 +41,20 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
 
-
 public class LoginActivity extends AppCompatActivity {
 
     protected CircularProgressButton btnLogin;
-    protected EditText etEmail,etPassword;
+    protected EditText etEmail, etPassword;
     private FirebaseAuth firebaseAuth;
     CallbackManager mCallbackManager;
     private LoginButton fbloginButton;
-    private Button googleSignin,fblogin;
+    private Button googleSignin, fblogin;
     private TextView passwordReset;
+    private long pressedTime;
 
     GoogleSignInOptions gso;
     GoogleSignInClient signInClient;
-public static final int GOOGLE_SIGN_IN_CODE=10005;
+    public static final int GOOGLE_SIGN_IN_CODE = 10005;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
         setContentView(R.layout.activity_login);
 
         btnLogin = (CircularProgressButton) findViewById(R.id.btn_login);
-        passwordReset=findViewById(R.id.reset_pass);
+        passwordReset = findViewById(R.id.reset_pass);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         googleSignin = findViewById(R.id.google_signin);
@@ -86,7 +86,7 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
                 Intent intent = signInClient.getSignInIntent();
 
 
-                startActivityForResult(intent,GOOGLE_SIGN_IN_CODE);
+                startActivityForResult(intent, GOOGLE_SIGN_IN_CODE);
             }
         });
 
@@ -95,14 +95,14 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
         FacebookSdk.sdkInitialize(LoginActivity.this);
 
         mCallbackManager = CallbackManager.Factory.create();
-         fbloginButton= findViewById(R.id.login_button);
-         fblogin=findViewById(R.id.btn_fb_login);
-         fblogin.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 fbloginButton.performClick();
-             }
-         });
+        fbloginButton = findViewById(R.id.login_button);
+        fblogin = findViewById(R.id.btn_fb_login);
+        fblogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fbloginButton.performClick();
+            }
+        });
         fbloginButton.setReadPermissions("email", "public_profile");
         fbloginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -154,7 +154,6 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
         });
 
 
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,26 +190,26 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
     }
 
 
-
-
-    public void onLoginClick(View View){
-        startActivity(new Intent(this,RegisterActivity.class));
-        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+    public void onLoginClick(View View) {
+        startActivity(new Intent(this, RegisterActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
 
     }
-    private void GotoMainActivity(){
-        Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+
+    private void GotoMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser!=null) {
-            //GotoMainActivity();
+        if (currentUser != null) {
+            // GotoMainActivity();
             updateUI(currentUser);
         }
     }
@@ -224,7 +223,7 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                AuthCredential authCredential= GoogleAuthProvider.getCredential(account.getIdToken(),null);
+                AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                 firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -271,13 +270,27 @@ public static final int GOOGLE_SIGN_IN_CODE=10005;
                     }
                 });
     }
-    private void updateUI(FirebaseUser user){
-        if(user!=null){
-            Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }else{
-            Toast.makeText(this,"Please sign in to continue",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Please sign in to continue", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
+
+    }
 }

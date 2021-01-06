@@ -53,6 +53,8 @@ public class JournalFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Intent intent=new Intent(getActivity(),LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                 });

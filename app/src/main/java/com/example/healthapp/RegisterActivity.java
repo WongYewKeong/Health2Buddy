@@ -111,7 +111,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 //btnRegister.doneLoadingAnimation(R.color.green, null);
                                 btnRegister.stopAnimation();
                                 Intent intent=new Intent(RegisterActivity.this,MenuActivity.class);
-
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
 
 
