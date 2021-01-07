@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthApp">
-        <activity android:name=".advanceworkout"></activity>
+        <activity
+            android:name=".NutritionSearchFood"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".advanceworkout" />
         <activity android:name=".focusedworkout" />
         <activity android:name=".overallworkout" />
         <activity android:name=".SplashActivity">
@@ -24,8 +27,8 @@
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_menu" />
+            android:label="@string/title_activity_menu"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".RegisterActivity"
             android:launchMode="singleTask"
