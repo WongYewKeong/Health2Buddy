@@ -12,6 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthApp">
+        <activity android:name=".advanceworkout"></activity>
+        <activity android:name=".focusedworkout" />
+        <activity android:name=".overallworkout" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,20 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MenuActivity"
             android:label="@string/title_activity_menu" />
         <activity
             android:name=".RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask">
-
-        </activity>
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

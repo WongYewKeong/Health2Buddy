@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FADEDE"
+    tools:context=".advanceworkout">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="ADVANCE\n\n\n
+Day 1: Chest and Back\n\n
+•  Barbell Bench Press – work up to a 5 rep max for the day\n
+o  Set 1 at 50% – 1 set of 5 reps\n
+o  Set 2 at 60% – 1 set of 5 reps\n
+o  Set 3 at 70% – 1 set of 5 reps\n
+o  Set 4 at 80% – 1 set of 5 reps\n
+o  Set 5 at 90% – 1 set of 5 reps\n
+o  Set 6 at 100% – 1 set of 5 reps\n
+•  Incline Dumbbell Press – 3 sets of 6-8 reps\n
+•  Dips – 3 sets of 6-10 reps\n
+•  Pullups – 3 sets of 5-8 reps\n
+•  Pendlay Rows – 3 sets of 6-10 reps\n
+•  Pulldowns – 3 sets of 6-10 reps\n\n\n
+Day 2: Legs\n\n
+•  Squats: work up to a 5 rep max for the day\n
+o  Set 1 at 50% – 1 set of 5 reps\n
+o  Set 2 at 60% – 1 set of 5 reps\n
+o  Set 3 at 70% – 1 set of 5 reps\n
+o  Set 4 at 80% – 1 set of 5 reps\n
+o  Set 5 at 90% – 1 set of 5 reps\n
+o  Set 6 at 100% – 1 set of 5 reps\n
+•  Leg Press – 3 sets of 6-10 reps\n
+•  Stiff-Legged Deadlift – 5 sets of 5 reps\n
+•  Hamstring Curls – 3 sets of 6-8 reps\n
+•  Calf-Raise – 5 sets of 10 reps\n\n\n
+Day 3: Shoulders and Arms\n\n
+•  Military Press or Dumbbell Press – 3 sets of 6-8\n
+•  Lateral Raises – 5 sets of 10 reps\n
+•  Barbell Curls – 5 sets of 6-10 reps\n
+•  Dumbbell Curls – 3 sets of 6-10 reps\n\n\n
+Day 4: Rest\n\n
+It’s your rest day. Rest your muscle to prepare for the next round of training.\n\n\n
+Day 5: Chest, Shoulders, and Triceps\n\n
+•  Flat Dumbbell Press – 5 sets of 20-6 (Pyramiding) reps\n
+•  Incline Dumbbell Press – 3 sets of 6-10 reps\n
+•  Hammer Strength Press – 3 sets of 10 reps\n
+•  Cable Flys – 3 sets of 12-15 reps\n
+•  Lateral Raises – 5 sets of 15-20 reps\n
+•  Reverse-Grip Pull-Downs – 5 sets of 15-20 reps\n\n\n
+Day 6: Back and Biceps\n\n
+•  Barbell Rows – 5 sets of 20-8 (Pyramiding) reps\n
+•  Barbell Shrugs – 3 sets of 15-20 reps\n
+•  Rack Deadlifts – 3 sets of 10-12 reps\n
+•  Pullups – 3 sets of 6-10 reps\n
+•  Pulldowns – 3 sets of 6-10 reps\n\n\n
+Day 7: Legs\n\n
+•  Front Squats – 5 sets of 20-8 (Pyramiding) reps\n
+•  Leg Extensions – 5 sets of 10 reps\n
+•  Hamstring Curls – 5 sets of 6-10 reps\n
+•  Seated Calf Raise – 5 sets of 6-10 reps\n
+•  Standing Calf Raise – 3 sets of 8-12 reps\n\n
+
+"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.105"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</ScrollView>
