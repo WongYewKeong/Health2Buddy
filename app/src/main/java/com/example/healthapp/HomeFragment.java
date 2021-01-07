@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     double heightnum, bmi;
     DecimalFormat df = new DecimalFormat("0.00");
     static final int REQUEST_CODE = 123;
+    int numstep=0;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -109,8 +110,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            stepcounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            stepcounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             isSensorPresent = true;
         } else {
             stepcount.setText("Counter sensor is not present");
@@ -254,7 +255,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor == stepcounter) {
-            stepCount = (int) sensorEvent.values[0];
+            stepCount=numstep++;
+           //stepCount = (int) sensorEvent.values[0];
             stepcount.setText(String.valueOf(stepCount));
             int cal = (int) (stepCount * 0.045);
             calories.setText(String.valueOf(cal) + " calories");
@@ -274,7 +276,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.registerListener(this, stepcounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
@@ -283,8 +285,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     @Override
     public void onPause() {
         super.onPause();
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
-            sensorManager.unregisterListener(this, stepcounter);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+           sensorManager.unregisterListener(this, stepcounter);
         }
     }
 

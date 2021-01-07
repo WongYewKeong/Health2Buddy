@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,9 +27,9 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
 
 
         View view =  inflater.inflate(R.layout.fragment_workout, container, false);
-        ImageButton overallbutton = view.findViewById(R.id.overallbutton);
-        ImageButton focusedbutton = view.findViewById(R.id.focusedbutton);
-        ImageButton advancedbutton = view.findViewById(R.id.advancedbutton);
+        ImageView overallbutton = view.findViewById(R.id.overallbutton);
+        ImageView focusedbutton = view.findViewById(R.id.focusedbutton);
+        ImageView advancedbutton = view.findViewById(R.id.advancedbutton);
         overallbutton.setOnClickListener(this);
         focusedbutton.setOnClickListener(this);
         advancedbutton.setOnClickListener(this);
