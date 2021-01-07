@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +35,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JournalFragment extends Fragment {
 
@@ -57,6 +65,7 @@ public class JournalFragment extends Fragment {
     ArrayList<Integer> journalID;
 
     public static MyJournalDB myJournalDB;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -81,41 +90,17 @@ public class JournalFragment extends Fragment {
         myJournalDB = Room.databaseBuilder(getContext(), MyJournalDB.class, "MyJournalDB").build();
 
 
-        Button signout=root.findViewById(R.id.btn_signout);
-        firebaseAuth=FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        signInClient = GoogleSignIn.getClient(getContext(), gso);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-                LoginManager.getInstance().logOut();
-                signInClient.signOut().addOnCompleteListener( new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent intent=new Intent(getActivity(),LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-        });
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editTextIsEmpty())
+                if (editTextIsEmpty())
                     return;
                 saveJournal();
 
-
             }
         });
+
+
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +108,7 @@ public class JournalFragment extends Fragment {
                 if(editTextIsEmpty())
                     return;
                 updateJournal();
+
             }
         });
 
@@ -174,7 +160,7 @@ public class JournalFragment extends Fragment {
             public void run() {
                 Journal journal = new Journal(etTitle.getText().toString(), etDescription.getText().toString());
                 myJournalDB.journalDao().insertJournal(journal);
-                toast(signInClient.getApplicationContext(), "Journal Added");
+                toast(getActivity(), "Journal Added");
                 getAllJournal();
             }
         }).start();
@@ -188,7 +174,7 @@ public class JournalFragment extends Fragment {
             public void run() {
                 Journal journal = new Journal(Integer.parseInt(tvJournalId.getText().toString()), etTitle.getText().toString(), etDescription.getText().toString());
                 myJournalDB.journalDao().updateJournal(journal);
-                toast(signInClient.getApplicationContext(), "Journal Updated");
+                toast(getActivity(), "Journal Updated");
                 getAllJournal();
             }
         }).start();
@@ -203,7 +189,7 @@ public class JournalFragment extends Fragment {
             @Override
             public void run() {
                 myJournalDB.journalDao().deleteJournal(jou);
-                toast(signInClient.getApplicationContext(), "Journal Removed");
+                toast(getActivity(), "Journal Removed");
                 getAllJournal();
 
             }
