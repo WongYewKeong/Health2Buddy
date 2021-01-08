@@ -50,7 +50,7 @@ import static android.widget.Toast.makeText;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
 
-    private TextView stepcount, calories, distance, user, weight, height, Bmi, bmiStatus, goal;
+    private TextView stepcount, calories, distance, user, weight, height, Bmi, bmiStatus, goal, goalnotification;
     private ImageView information;
     private SensorManager sensorManager;
     private Sensor stepcounter;
@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         btnEditHeight = root.findViewById(R.id.btn_edit_height);
         btnEditGoal = root.findViewById(R.id.btn_edit_goal);
         goal = root.findViewById(R.id.tv_goal);
+        goalnotification = root.findViewById(R.id.tv_goal_notification);
         weight = root.findViewById(R.id.tv_weight);
         height = root.findViewById(R.id.tv_height);
         Bmi = root.findViewById(R.id.tv_bmi);
@@ -110,6 +111,18 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             }
         }
 
+
+        if (goalnum == stepCount){
+            goalnotification.setText("You have not set your goal of steps count today. Please set your goal below");
+        }
+
+        if (goalnum > stepCount){
+            goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+        }
+
+        if (goalnum < stepCount){
+            goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+        }
 
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
