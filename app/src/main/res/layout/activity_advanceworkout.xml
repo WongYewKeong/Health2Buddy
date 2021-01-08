@@ -7,14 +7,29 @@
     android:background="#FADEDE"
     tools:context=".advanceworkout">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="ADVANCE\n\n\n
+        android:orientation="vertical">
+
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="193dp"
+
+            app:autoPlay="false"
+            app:showFullScreenButton="false"
+            app:videoId="JeUnJxvd2-U" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="ADVANCE\n\n\n
 Day 1: Chest and Back\n\n
 •  Barbell Bench Press – work up to a 5 rep max for the day\n
 o  Set 1 at 50% – 1 set of 5 reps\n
@@ -68,10 +83,11 @@ Day 7: Legs\n\n
 •  Standing Calf Raise – 3 sets of 8-12 reps\n\n
 
 "
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.105"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.105"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 </ScrollView>
