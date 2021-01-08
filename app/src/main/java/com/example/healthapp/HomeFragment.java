@@ -261,7 +261,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 user.setText(value.getString("Username"));
 
 
-                //goalnum = Integer.parseInt(value.getString("Goal of steps count"));
                 weightnum = Integer.parseInt(value.getString("Weight"));
                 heightnum = Double.parseDouble(value.getString("Height")) / 100;
                 bmi = weightnum / (heightnum * heightnum);
