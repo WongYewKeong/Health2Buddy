@@ -1,5 +1,6 @@
 package com.example.healthapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -34,6 +39,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 
 public class NutritionFragment extends Fragment {
     
@@ -51,16 +58,18 @@ public class NutritionFragment extends Fragment {
     private String gender;
     
     // double format
-    DecimalFormat df = new DecimalFormat("0.00");
+    DecimalFormat df = new DecimalFormat("0");
     
     // Variables
-    String date;
+    String date, date2;
     String userId;
     
     // Views
-    //TextView tv_lowRangeCal, tv_highRangeCal, tv_neededCarbs, tv_neededFat, tv_neededProtein;
-    ProgressBar pb_cal_nutrition;
-    TextView tv_pb_nutrition;
+    TextView tv_carbs_status_nutrition, tv_fat_status_nutrition, tv_protein_status_nutrition;
+    ProgressBar pb_cal_nutrition, pb_carbs_nutrition, pb_protein_nutrition, pb_fat_nutrition;
+    TextView tv_pb_nutrition, tv_date_nutrition;
+    Button btn_add_nutrition_data;
+    EditText et_cal_nutrition, et_carbs_nutrition, et_protein_nutrition, et_fat_nutrition;
     
     // Firestore
     FirebaseAuth firebaseAuth;
@@ -71,24 +80,51 @@ public class NutritionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_nutrition, container, false);
         
-        
         date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
-        Log.d("Debug", "Today: " + date);
+        date2 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         
         // Text Views
-        //tv_lowRangeCal = root.findViewById(R.id.tv_lowRangeCal);
-        //tv_neededCarbs = root.findViewById(R.id.tv_neededProtein);
-        //tv_neededFat = root.findViewById(R.id.tv_neededProtein);
-        //tv_neededProtein = root.findViewById(R.id.tv_neededProtein);
-        //tv_highRangeCal = root.findViewById(R.id.tv_highRangeCal);
+        tv_carbs_status_nutrition = root.findViewById(R.id.tv_carbs_status_nutrition);
+        tv_fat_status_nutrition = root.findViewById(R.id.tv_fat_status_nutrition);
+        tv_protein_status_nutrition = root.findViewById(R.id.tv_protein_status_nutrition);
+        tv_date_nutrition = root.findViewById(R.id.tv_date_nutrition);
+        tv_date_nutrition.setText(date2);
         
+        // Progress bar
         pb_cal_nutrition = root.findViewById(R.id.pb_cal_nutrition);
+        pb_carbs_nutrition = root.findViewById(R.id.pb_carb_nutrition);
+        pb_fat_nutrition = root.findViewById(R.id.pb_fat_nutrition);
+        pb_protein_nutrition = root.findViewById(R.id.pb_protein_nutrition);
         tv_pb_nutrition = root.findViewById(R.id.tv_pb_cal_nutrition);
+        
+        et_cal_nutrition = root.findViewById(R.id.et_cal_nutrition);
+        et_carbs_nutrition = root.findViewById(R.id.et_carb_nutrition);
+        et_protein_nutrition = root.findViewById(R.id.et_protein_nutrition);
+        et_fat_nutrition = root.findViewById(R.id.et_fat_nutrition);
+        btn_add_nutrition_data = root.findViewById(R.id.btn_add_nutrition_data);
         
         sv_food = root.findViewById(R.id.sv_food);
         sv_food.setIconifiedByDefault(false);
         sv_food.setSubmitButtonEnabled(true);
         sv_food.setQueryHint("Search food here");
+        
+        btn_add_nutrition_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, Object> consumedNutrition = new HashMap<>();
+                consumedCal += Double.parseDouble(et_cal_nutrition.getText().toString());
+                consumedCarbs += Double.parseDouble(et_carbs_nutrition.getText().toString());
+                consumedFat += Double.parseDouble(et_fat_nutrition.getText().toString());
+                consumedProtein += Double.parseDouble(et_protein_nutrition.getText().toString());
+                
+                consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
+                consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
+                consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
+                consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
+                
+                db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+            }
+        });
         
         if (sv_food != null) {
             
@@ -218,14 +254,20 @@ public class NutritionFragment extends Fragment {
     }
     
     private void displayNutritionData() {
-        //tv_lowRangeCal.setText(("Low Range Calories: " + df.format(lowRangeCal)));
-        //tv_highRangeCal.setText(("High Range Calories: " + df.format(highRangeCal)));
-        //tv_neededProtein.setText(("Protein needed: " + df.format(neededProtein)));
-        //tv_neededCarbs.setText(("Carbs needed: " + df.format(neededCarbs)));
-        //tv_neededFat.setText(("Fat needed: " + df.format(neededFat)));
-        tv_pb_nutrition.setText(String.valueOf(df.format(consumedCal) + "/" + df.format(lowRangeCal) + " cal"));
+        // Text Views
+        tv_carbs_status_nutrition.setText((df.format(consumedCarbs) + "/" + df.format(neededCarbs) + " Carbs"));
+        tv_fat_status_nutrition.setText((df.format(consumedFat) + "/" + df.format(neededFat) + " Fat"));
+        tv_protein_status_nutrition.setText((df.format(consumedProtein) + "/" + df.format(neededProtein) + " Protein"));
+        tv_pb_nutrition.setText((df.format(consumedCal) + "/" + df.format(lowRangeCal) + " Cal"));
+        // Progress Bar
         pb_cal_nutrition.setProgress((int) consumedCal);
         pb_cal_nutrition.setMax((int) lowRangeCal);
+        pb_carbs_nutrition.setProgress((int) consumedCarbs);
+        pb_carbs_nutrition.setMax((int) neededCarbs);
+        pb_protein_nutrition.setProgress((int) consumedProtein);
+        pb_protein_nutrition.setMax((int) neededProtein);
+        pb_fat_nutrition.setProgress((int) consumedFat);
+        pb_fat_nutrition.setMax((int) neededFat);
     }
     
     private void createTodayRecord() {
@@ -238,5 +280,6 @@ public class NutritionFragment extends Fragment {
         
         db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
     }
+    
     
 }
