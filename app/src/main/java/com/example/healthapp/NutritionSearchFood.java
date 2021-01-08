@@ -46,6 +46,8 @@ public class NutritionSearchFood extends AppCompatActivity {
     // Button
     ImageButton btn_back, btn_refresh;
     
+    private String food_query, date;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class NutritionSearchFood extends AppCompatActivity {
         // Intent
         Intent intent = getIntent();
         getResult(intent.getStringExtra("f_url"));
+        food_query = intent.getStringExtra("food");
+        date = intent.getStringExtra("date");
         
         // Recycler view
         recyclerView = findViewById(R.id.recycler_nutrition_search_food);
@@ -63,7 +67,7 @@ public class NutritionSearchFood extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(NutritionSearchFood.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         
-        foodRecyclerViewAdapter = new FoodRecyclerViewAdapter(NutritionSearchFood.this, food_list);
+        foodRecyclerViewAdapter = new FoodRecyclerViewAdapter(NutritionSearchFood.this, food_list, date);
         recyclerView.setAdapter(foodRecyclerViewAdapter);
         
         notifyDataChanged();
@@ -73,6 +77,7 @@ public class NutritionSearchFood extends AppCompatActivity {
         sv_food.setIconifiedByDefault(false);
         sv_food.setSubmitButtonEnabled(true);
         sv_food.setQueryHint("Search food here");
+        sv_food.setQuery(food_query, false);
         
         if (sv_food != null) {
             
