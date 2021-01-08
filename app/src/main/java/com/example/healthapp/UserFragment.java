@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,7 +27,9 @@ public class UserFragment extends Fragment {
     GoogleSignInOptions gso;
     GoogleSignInClient signInClient;
 
-
+    TextView tvName ;
+    EditText etAge , etGender ;
+    Button btnUpdate;
 
 
 
@@ -61,6 +65,11 @@ public class UserFragment extends Fragment {
             }
         });
         return root;
+
+
+
+
+
     }
 
 }

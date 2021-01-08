@@ -7,39 +7,57 @@
     android:background="#E2FFC0"
     tools:context=".overallworkout">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="OVERALL\n\n\n
-Day 1: Chest, Back, Shoulders, Legs, Biceps, Triceps\n\n
-•  Chest – Barbell Bench Press – 4 sets of 8 reps\n
-•  Back – Lat-pulldowns – 4 sets of 10 reps\n
-•  Shoulders – Seated Dumbbell Press – 4 sets of 10 reps\n
-•  Legs – Leg Extensions – 4 sets of 10 reps\n
-•  Biceps – Barbell Bbicep Curls – 3 sets of 10 reps\n
-•  Triceps – Triceps Rope Pushdowns – 3 sets of 15 reps\n\n\n
-Day 2: Legs, Triceps, Biceps, Chest, Back, Shoulder\n\n
-•  Legs – Leg Press Machine – 4 sets of 8 reps\n
-•  Triceps – Overhead Bar Extensions – 3 sets of 20 reps\n
-•  Biceps – EZ Bar Curls – 4 sets of 10 reps\n
-•  Chest – Machine Chest Press – 4 sets of 10 reps\n
-•  Back – T-Bar Row – 4 sets of 10 reps\n
-•  Shoulders – Lateral Raises – 3 sets of 20 reps\n\n\n
-Day 3: Shoulders, Back, Chest, Legs, Triceps, Biceps\n\n
-•  Shoulders – EZ Bar Upright Rows – 3 sets of 15 reps\n
-•  Back – Close-Grip Pulldowns – 4 sets of 12 reps\n
-•  Chest – Cable Fly – 4 sets of 10 reps\n
-•  Legs – Lunges – 3 sets of 10 reps per leg\n
-•  Triceps – Skullcrushers – 3 sets of 15 reps\n
-•  Biceps – Hammer Curls – 3 sets of 12 reps\n
-\n
-"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
+
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="193dp"
+
+            app:autoPlay="false"
+            app:showFullScreenButton="false"
+            app:videoId="Fo2caqAeanI" />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="OVERALL\n\n\n
+    Day 1: Chest, Back, Shoulders, Legs, Biceps, Triceps\n\n
+    •  Chest – Barbell Bench Press – 4 sets of 8 reps\n
+    •  Back – Lat-pulldowns – 4 sets of 10 reps\n
+    •  Shoulders – Seated Dumbbell Press – 4 sets of 10 reps\n
+    •  Legs – Leg Extensions – 4 sets of 10 reps\n
+    •  Biceps – Barbell Bbicep Curls – 3 sets of 10 reps\n
+    •  Triceps – Triceps Rope Pushdowns – 3 sets of 15 reps\n\n\n
+    Day 2: Legs, Triceps, Biceps, Chest, Back, Shoulder\n\n
+    •  Legs – Leg Press Machine – 4 sets of 8 reps\n
+    •  Triceps – Overhead Bar Extensions – 3 sets of 20 reps\n
+    •  Biceps – EZ Bar Curls – 4 sets of 10 reps\n
+    •  Chest – Machine Chest Press – 4 sets of 10 reps\n
+    •  Back – T-Bar Row – 4 sets of 10 reps\n
+    •  Shoulders – Lateral Raises – 3 sets of 20 reps\n\n\n
+    Day 3: Shoulders, Back, Chest, Legs, Triceps, Biceps\n\n
+    •  Shoulders – EZ Bar Upright Rows – 3 sets of 15 reps\n
+    •  Back – Close-Grip Pulldowns – 4 sets of 12 reps\n
+    •  Chest – Cable Fly – 4 sets of 10 reps\n
+    •  Legs – Lunges – 3 sets of 10 reps per leg\n
+    •  Triceps – Skullcrushers – 3 sets of 15 reps\n
+    •  Biceps – Hammer Curls – 3 sets of 12 reps\n
+    \n
+    "
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
 </ScrollView>
