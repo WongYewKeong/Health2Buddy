@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
 
-        btnUpdate = findViewById(R.id.bt_update);
+        btnUpdate = findViewById(R.id.bt_update); ok
 
     }
 
