@@ -292,6 +292,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 else if (stepCount < goalnum){
                     goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
                 }
+                else if (stepCount >= goalnum){
+                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                }
             }
 
         });
@@ -320,17 +323,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             int feet = (int) (stepCount * 2.5);
             String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
             distance.setText(finaldistance + " km");
-
-            if (goalnum == stepCount ){
-                goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-            }
-
-            else if (stepCount < goalnum){
-                goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-            }
-            else if (stepCount >= goalnum){
-                goalnotification.setText("Congratulation! You have reached your goal of steps count!");
-            }
         }
 
     }
@@ -355,6 +347,17 @@ public class HomeFragment extends Fragment implements SensorEventListener {
            sensorManager.unregisterListener(this, stepcounter);
         }
     }
+
+   // private void createTodayRecord() {
+        // Create the FireStore document for today record
+       // Map<String, Object> consumedNutrition = new HashMap<>();
+       // consumedNutrition.put("consumedCal", "0");
+       // consumedNutrition.put("consumedCarbs", "0");
+       // consumedNutrition.put("consumedFat", "0");
+       // consumedNutrition.put("consumedProtein", "0");
+
+       // db.collection("users").document(userId).collection("dailyRecord").document(date).set(stepCount);
+    //}
 
 
 }
