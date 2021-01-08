@@ -13,6 +13,7 @@ import android.hardware.SensorManager;
 import android.icu.util.MeasureUnit;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,10 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,12 +68,17 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     DecimalFormat df = new DecimalFormat("0.00");
     static final int REQUEST_CODE = 123;
     int numstep=0;
+    String date;
+    String userId;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        //Log.d("Debug", "Today: " + date);
 
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         stepcount = root.findViewById(R.id.tv_steps);
@@ -88,10 +97,11 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         user = root.findViewById(R.id.username);
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        userId = firebaseAuth.getCurrentUser().getUid();
 
 
         DocumentReference documentReference = db.collection("users").document(userId);
+        //DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyRecord").document(date);
 
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
@@ -282,10 +292,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 else if (stepCount < goalnum){
                     goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
                 }
-
-                else if (stepCount >= goalnum){
-                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
-                }
             }
 
         });
@@ -315,7 +321,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
             distance.setText(finaldistance + " km");
 
+            if (goalnum == stepCount ){
+                goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
+            }
 
+            else if (stepCount < goalnum){
+                goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+            }
+            else if (stepCount >= goalnum){
+                goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+            }
         }
 
     }
