@@ -26,9 +26,7 @@
         <activity
             android:name=".NutritionSearchFood"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".advanceworkout" />
-        <activity android:name=".focusedworkout" />
-        <activity android:name=".overallworkout" />
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
