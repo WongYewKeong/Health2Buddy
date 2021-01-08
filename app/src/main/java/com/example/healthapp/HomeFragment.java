@@ -31,8 +31,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -298,6 +300,35 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             }
 
         });
+
+       // documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+         //   @Override
+         //   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+              //  if (task.isSuccessful()) {
+               //     DocumentSnapshot document = task.getResult();
+                  //  if (document.exists()) {
+                    //    Log.d("Debug", "Document exists!");
+                   // } else {
+                   //     createTodayRecord();
+                 //   }
+               // } else {
+                //    Log.d("Debug", "Failed with: ", task.getException());
+              //  }
+            //}
+       // });
+
+        //documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+           // @Override
+            //public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                //try {
+                    //stepCount = Integer.parseInt(value.getString("stepCount"));
+                    //onSensorChanged();
+                //} catch (NullPointerException e) {
+                 //   Log.d("Debug", e.getMessage());
+                //}
+            //}
+        //});
+
         information.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -350,13 +381,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
    // private void createTodayRecord() {
         // Create the FireStore document for today record
-       // Map<String, Object> consumedNutrition = new HashMap<>();
-       // consumedNutrition.put("consumedCal", "0");
-       // consumedNutrition.put("consumedCarbs", "0");
-       // consumedNutrition.put("consumedFat", "0");
-       // consumedNutrition.put("consumedProtein", "0");
+       // Map<String, Object> totalstepcount = new HashMap<>();
+       // totalstepcount.put("stepCount", "0");
 
-       // db.collection("users").document(userId).collection("dailyRecord").document(date).set(stepCount);
+       // db.collection("users").document(userId).collection("dailyRecord").document(date).set(totalstepcount);
     //}
 
 
