@@ -1,4 +1,4 @@
-package com.example.healthapp.entities;
+package com.example.healthapp;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
 
-        btnUpdate = findViewById(R.id.bt_update); ok
+        btnUpdate = findViewById(R.id.bt_update);
 
     }
 
