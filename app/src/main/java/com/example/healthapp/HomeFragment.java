@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         }
 
         if (goalnum < stepCount){
-            goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+            goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder");
         }
 
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
