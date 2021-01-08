@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
         if (goalnum == stepCount){
-            goalnotification.setText("You have not set your goal of steps count today. Please set your goal below");
+            goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
         }
 
         if (goalnum > stepCount){
