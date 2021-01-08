@@ -7,19 +7,34 @@
     android:layout_height="match_parent"
     android:background="#FFF8BA"
     android:orientation="vertical"
-    tools:context=".focusedworkout">
+    tools:context=".focusedworkout"
+    tools:ignore="ExtraText">
     android:padding="10dp"
-    android:fillViewport="false">
+    android:fillViewport="true">
 
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="FOCUSED\n\n
+        android:orientation="vertical">
+
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="193dp"
+
+            app:autoPlay="false"
+            app:showFullScreenButton="false"
+            app:videoId="iZtS8A6ndRw" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="FOCUSED\n\n
 \n
 Day 1: Chest, Shoulders and Triceps\n\n
 Chest\n
@@ -80,9 +95,10 @@ Biceps\n
 •  Concentration Curl – 3 sets of 10 reps\n
 •  Reverse Barbell Curl – 3 sets of 10 reps\n\n
 "
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 </ScrollView>

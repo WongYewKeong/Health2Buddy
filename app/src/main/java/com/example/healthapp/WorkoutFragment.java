@@ -30,9 +30,11 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
         ImageView overallbutton = view.findViewById(R.id.overallbutton);
         ImageView focusedbutton = view.findViewById(R.id.focusedbutton);
         ImageView advancedbutton = view.findViewById(R.id.advancedbutton);
+        ImageView timer=view.findViewById(R.id.timer);
         overallbutton.setOnClickListener(this);
         focusedbutton.setOnClickListener(this);
         advancedbutton.setOnClickListener(this);
+        timer.setOnClickListener(this);
         return view;
 
 
@@ -55,6 +57,11 @@ public class WorkoutFragment extends Fragment implements View.OnClickListener{
             case R.id.advancedbutton:
                 Intent intent2 = new Intent ( getActivity(),advanceworkout.class);
                 startActivity(intent2);
+                break;
+
+            case R.id.timer:
+                Intent intent3 = new Intent ( getActivity(),timerActivity.class);
+                startActivity(intent3);
                 break;
         }
 
