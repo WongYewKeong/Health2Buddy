@@ -50,16 +50,16 @@ import static android.widget.Toast.makeText;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
 
-    private TextView stepcount, calories, distance, user, weight, height, Bmi, bmiStatus;
+    private TextView stepcount, calories, distance, user, weight, height, Bmi, bmiStatus, goal;
     private ImageView information;
     private SensorManager sensorManager;
     private Sensor stepcounter;
     private boolean isSensorPresent;
-    private Button btnEditWeight, btnEditHeight;
+    private Button btnEditWeight, btnEditHeight, btnEditGoal;
     int stepCount = 0;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
-    int weightnum;
+    int weightnum, goalnum;
     double heightnum, bmi;
     DecimalFormat df = new DecimalFormat("0.00");
     static final int REQUEST_CODE = 123;
@@ -77,6 +77,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         distance = root.findViewById(R.id.tv_distance);
         btnEditWeight = root.findViewById(R.id.btn_edit_weight);
         btnEditHeight = root.findViewById(R.id.btn_edit_height);
+        btnEditGoal = root.findViewById(R.id.btn_edit_goal);
+        goal = root.findViewById(R.id.tv_goal);
         weight = root.findViewById(R.id.tv_weight);
         height = root.findViewById(R.id.tv_height);
         Bmi = root.findViewById(R.id.tv_bmi);
@@ -195,6 +197,44 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
             }
         });
+
+        btnEditGoal.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View view){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Enter your goal of steps count");
+
+
+                final EditText goal = new EditText(getActivity());
+
+                goal.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(goal);
+
+
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!goal.getText().toString().isEmpty()) {
+                            documentReference.update("Goal of steps count", goal.getText().toString());
+                        } else {
+                            dialog.cancel();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -202,11 +242,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     return;
                 }
 
+                goal.setText(value.getString("Goal of steps count"));
                 weight.setText(value.getString("Weight") + " Kg");
                 height.setText(value.getString("Height") + " Cm");
                 user.setText(value.getString("Username"));
 
 
+                goalnum = Integer.parseInt(value.getString("Goal of steps count"));
                 weightnum = Integer.parseInt(value.getString("Weight"));
                 heightnum = Double.parseDouble(value.getString("Height")) / 100;
                 bmi = weightnum / (heightnum * heightnum);
