@@ -111,18 +111,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             }
         }
 
-        if (goalnum == stepCount ){
-            goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-        }
-
-        else if (goalnum >= stepCount){
-            goalnotification.setText("Congratulation! You have reached your goal of steps count!");
-        }
-
-        else if (goalnum < stepCount){
-            goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-        }
-
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             stepcounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -287,7 +275,17 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.teal_200));
                     }
                 }
+                if (goalnum == stepCount ){
+                    goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
+                }
 
+                else if (stepCount < goalnum){
+                    goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+                }
+
+                else if (stepCount >= goalnum){
+                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                }
             }
 
         });
