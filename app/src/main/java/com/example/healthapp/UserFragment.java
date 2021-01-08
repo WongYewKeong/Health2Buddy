@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -30,6 +31,7 @@ public class UserFragment extends Fragment {
     TextView tvName ;
     EditText etAge , etGender ;
     Button btnUpdate;
+    ImageView profile;
 
 
 
@@ -41,6 +43,13 @@ public class UserFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_user, container, false);
 
         Button signout = root.findViewById(R.id.btn_signout);
+        tvName = root.findViewById(R.id.tv_name);
+        profile=root.findViewById(R.id.iv_profilepicture);
+
+        etAge = root.findViewById(R.id.et_age);
+        etGender = root.findViewById(R.id.et_gender);
+
+        btnUpdate =root.findViewById(R.id.bt_update);
         firebaseAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
