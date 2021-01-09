@@ -1,7 +1,6 @@
 package com.example.healthapp;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.icu.util.MeasureUnit;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -22,9 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -32,8 +28,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -41,8 +35,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.SetOptions;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -50,9 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-
-import static android.widget.Toast.makeText;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
 
@@ -79,8 +68,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
-        //Log.d("Debug", "Today: " + date);
+        date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        Log.d("Debug", "Today: " + date);
 
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         stepcount = root.findViewById(R.id.tv_steps);
@@ -103,7 +92,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
         DocumentReference documentReference = db.collection("users").document(userId);
-        //DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyRecord").document(date);
+        DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
 
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
@@ -301,33 +290,34 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         });
 
-       // documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-         //   @Override
-         //   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-              //  if (task.isSuccessful()) {
-               //     DocumentSnapshot document = task.getResult();
-                  //  if (document.exists()) {
-                    //    Log.d("Debug", "Document exists!");
-                   // } else {
-                   //     createTodayRecord();
-                 //   }
-               // } else {
-                //    Log.d("Debug", "Failed with: ", task.getException());
-              //  }
-            //}
-       // });
+        documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+               if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("Debug", "Document exists!");
+                    } else {
+                        createTodayRecord();
+                    }
+                } else {
+                    Log.d("Debug", "Failed with: ", task.getException());
+                }
+            }
+        });
 
-        //documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-           // @Override
-            //public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                //try {
+        documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                try {
                     //stepCount = Integer.parseInt(value.getString("stepCount"));
+                    stepcount.setText(value.getString("stepCount"));
                     //onSensorChanged();
-                //} catch (NullPointerException e) {
-                 //   Log.d("Debug", e.getMessage());
-                //}
-            //}
-        //});
+                } catch (NullPointerException e) {
+                    Log.d("Debug", e.getMessage());
+                }
+            }
+        });
 
         information.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -347,8 +337,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor == stepcounter) {
             stepCount=numstep++;
+            DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
+            documentReference2.update("stepCount",String.valueOf(stepCount));
            //stepCount = (int) sensorEvent.values[0];
-            stepcount.setText(String.valueOf(stepCount));
+            //stepcount.setText(String.valueOf(stepCount));
             int cal = (int) (stepCount * 0.045);
             calories.setText(String.valueOf(cal) + " calories");
             int feet = (int) (stepCount * 2.5);
@@ -379,13 +371,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         }
     }
 
-   // private void createTodayRecord() {
-        // Create the FireStore document for today record
-       // Map<String, Object> totalstepcount = new HashMap<>();
-       // totalstepcount.put("stepCount", "0");
+    private void createTodayRecord() {
+         //Create the FireStore document for today record
+        Map<String, Object> totalstepcount = new HashMap<>();
+        totalstepcount.put("stepCount", "0");
 
-       // db.collection("users").document(userId).collection("dailyRecord").document(date).set(totalstepcount);
-    //}
+        db.collection("users").document(userId).collection("dailyStep").document(date).set(totalstepcount);
+    }
 
 
 }
