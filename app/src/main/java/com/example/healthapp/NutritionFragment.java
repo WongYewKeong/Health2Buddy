@@ -192,8 +192,22 @@ public class NutritionFragment extends Fragment {
         });
         
         btn_add_nutrition_data.setOnClickListener(view -> {
-            addManualConsumedFoodRecord();
-            clearEditText();
+            if (!et_food_name_nutrition.getText().toString().equals("") && !et_cal_nutrition.getText().toString().equals("") && !et_carbs_nutrition.getText().toString().equals("") && !et_protein_nutrition.getText().toString().equals("") && !et_fat_nutrition.getText().toString().equals("")){
+                addManualConsumedFoodRecord();
+                clearEditText();
+            } else {
+                if(et_food_name_nutrition.getText().toString().equals(""))
+                    et_food_name_nutrition.setError("Cannot be Empty");
+                if(et_cal_nutrition.getText().toString().equals(""))
+                    et_cal_nutrition.setError("Cannot be Empty");
+                if(et_carbs_nutrition.getText().toString().equals(""))
+                    et_carbs_nutrition.setError("Cannot be Empty");
+                if(et_protein_nutrition.getText().toString().equals(""))
+                    et_protein_nutrition.setError("Cannot be Empty");
+                if(et_fat_nutrition.getText().toString().equals(""))
+                    et_fat_nutrition.setError("Cannot Empty");
+            }
+            
         });
         
         if (sv_food != null) {
@@ -288,10 +302,10 @@ public class NutritionFragment extends Fragment {
                     String foodInfor;
                     
                     foodInfor = consumedNutrition.get("item_name").toString() +
-                            "\nCal - " + consumedNutrition.get("nf_calories").toString() + " ," +
-                            " Carb - " + consumedNutrition.get("nf_carb").toString() + " ," +
-                            " Protein - " + consumedNutrition.get("nf_protein").toString() + " ," +
-                            " Fat - " + consumedNutrition.get("nf_total_fat").toString() + " ";
+                            "\n" + consumedNutrition.get("nf_calories").toString() + " Cal," +
+                            " " + consumedNutrition.get("nf_carb").toString() + " Carb," +
+                            " " + consumedNutrition.get("nf_protein").toString() + " Protein," +
+                            " " + consumedNutrition.get("nf_total_fat").toString() + " Fat";
                     
                     foodArray.add(foodInfor);
                     foodID.add(doc.getId());
@@ -426,6 +440,7 @@ public class NutritionFragment extends Fragment {
     private void clearEditText() {
         et_food_name_nutrition.setText("");
         et_cal_nutrition.setText("");
+        et_carbs_nutrition.setText("");
         et_protein_nutrition.setText("");
         et_fat_nutrition.setText("");
     }
