@@ -314,6 +314,11 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     else if (Integer.parseInt(value.getString("stepCount")) >= goalnum){
                         goalnotification.setText("Congratulation! You have reached your goal of steps count!");
                     }
+                    int cal = (int) ((int) (Integer.parseInt(value.getString("stepCount"))) * 0.045);
+                    calories.setText(String.valueOf(cal) + " calories");
+                    int feet = (int) ((int) (Integer.parseInt(value.getString("stepCount")))* 2.5);
+                    String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
+                    distance.setText(finaldistance + " km");
                     //onSensorChanged();
                 } catch (NullPointerException e) {
                     Log.d("Debug", e.getMessage());
@@ -335,19 +340,20 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         return root;
     }
-
+    int total=0;
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor == stepcounter) {
+        if (sensorEvent.sensor == stepcounter&&isAdded()) {
+
             stepCount=numstep++;
             DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
-            documentReference2.update("stepCount",String.valueOf(stepCount));
+
+                    documentReference2.update("stepCount",String.valueOf(stepCount));
+
+
+
            //stepCount = (int) sensorEvent.values[0];
             //stepcount.setText(String.valueOf(stepCount));
-            int cal = (int) (stepCount * 0.045);
-            calories.setText(String.valueOf(cal) + " calories");
-            int feet = (int) (stepCount * 2.5);
-            String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
-            distance.setText(finaldistance + " km");
+
         }
 
     }
