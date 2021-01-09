@@ -256,16 +256,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                 Bmi.setText(String.valueOf(df.format(bmi)) + " Kg/m\u00B2");
 
-                if (goalnum == stepCount ){
-                    goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-                }
 
-                else if (stepCount < goalnum){
-                    goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-                }
-                else if (stepCount >= goalnum){
-                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
-                }
 
                 documentReference.update("BMI", String.valueOf(df.format(bmi)));
 
@@ -313,6 +304,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 try {
                     //stepCount = Integer.parseInt(value.getString("stepCount"));
                     stepcount.setText(value.getString("stepCount"));
+                    if (goalnum == 0 ){
+                        goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
+                    }
+
+                    else if (Integer.parseInt(value.getString("stepCount")) < goalnum){
+                        goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+                    }
+                    else if (Integer.parseInt(value.getString("stepCount")) >= goalnum){
+                        goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                    }
                     //onSensorChanged();
                 } catch (NullPointerException e) {
                     Log.d("Debug", e.getMessage());
