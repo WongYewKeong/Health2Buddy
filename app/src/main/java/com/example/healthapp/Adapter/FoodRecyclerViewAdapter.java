@@ -134,6 +134,7 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<com.example.he
             
             db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
             
+            Toast.makeText(context, "Food Added Successful", Toast.LENGTH_SHORT).show();
             ((Activity) context).finish();
         }
     }

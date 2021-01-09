@@ -200,6 +200,15 @@
                     android:text="Add Food Nutrition Intake Manually" />
 
                 <EditText
+                    android:id="@+id/et_food_name_nutrition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Food Name"
+                    android:inputType="textPersonName"
+                    android:textSize="12sp" />
+
+                <EditText
                     android:id="@+id/et_cal_nutrition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
