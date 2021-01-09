@@ -1,10 +1,12 @@
 package com.example.healthapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,7 @@ public class timerActivity extends AppCompatActivity {
         EditText etduration=findViewById(R.id.et_duration);
         EditText etact=findViewById(R.id.et_activity);
         Button save=findViewById(R.id.btn_saveactivity);
+        ImageView history=findViewById(R.id.history);
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
@@ -76,6 +79,14 @@ public class timerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 circleTimeView.stopTimer();
+            }
+        });
+
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(timerActivity.this,HistoryActivity.class);
+                startActivity(intent);
             }
         });
 

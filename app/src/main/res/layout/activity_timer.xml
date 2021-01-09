@@ -75,44 +75,54 @@
             android:hint="Duration (Seconds)"
             android:inputType="number"
             android:textSize="24sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="115dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-
-            android:id="@+id/play"
-            android:layout_width="96dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_baseline_play_circle_filled_24"
-            app:civ_border_color="#3F51B5"
-            app:civ_border_width="2dp" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-
-            android:id="@+id/stop"
-            android:layout_width="96dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_baseline_stop_circle_24"
-            app:civ_border_color="#3F51B5"
-            app:civ_border_width="2dp" />
 
         <Button
             android:id="@+id/btn_saveactivity"
             android:layout_width="113dp"
             android:layout_height="58dp"
-            android:layout_marginLeft="24dp"
+            android:layout_gravity="center"
             android:background="@drawable/button_background_blue"
             android:text="Save Activity" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+
+                android:id="@+id/play"
+                android:layout_width="80dp"
+                android:layout_height="83dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_baseline_play_circle_filled_24"
+                app:civ_border_color="@android:color/transparent"
+                app:civ_border_width="2dp" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+
+                android:id="@+id/stop"
+                android:layout_width="80dp"
+                android:layout_height="83dp"
+                android:layout_marginStart="24dp"
+                android:src="@drawable/ic_baseline_stop_circle_24"
+                app:civ_border_color="@android:color/transparent"
+                app:civ_border_width="2dp" />
+
+            <ImageView
+                android:id="@+id/history"
+                android:layout_width="203dp"
+                android:layout_height="77dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                app:srcCompat="@drawable/ic_baseline_history_24" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
