@@ -197,7 +197,8 @@
                     android:id="@+id/textView18"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Food Nutrition Intake Manually" />
+                    android:text="Add Food Nutrition Intake Manually"
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_food_name_nutrition"
@@ -206,7 +207,7 @@
                     android:ems="10"
                     android:hint="Food Name"
                     android:inputType="textPersonName"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_cal_nutrition"
@@ -215,7 +216,7 @@
                     android:ems="10"
                     android:hint="Calories"
                     android:inputType="number"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_carb_nutrition"
@@ -224,7 +225,7 @@
                     android:ems="10"
                     android:hint="Carbs"
                     android:inputType="number"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_protein_nutrition"
@@ -233,7 +234,7 @@
                     android:ems="10"
                     android:hint="Protein"
                     android:inputType="number"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_fat_nutrition"
@@ -242,7 +243,7 @@
                     android:ems="10"
                     android:hint="Fat"
                     android:inputType="number"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/btn_add_nutrition_data"

@@ -394,15 +394,19 @@ public class NutritionFragment extends Fragment {
     }
     
     public void showDataInListView() {
-        
+    
+        foodListAdapter.clear();
+        foodListAdapter.addAll(foodArray);
+        lv_consumed_food_nutrition.setAdapter(foodListAdapter);
+        /*
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                foodListAdapter.clear();
-                foodListAdapter.addAll(foodArray);
-                lv_consumed_food_nutrition.setAdapter(foodListAdapter);
+            
             }
         });
+        
+         */
         
     }
     
