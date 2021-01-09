@@ -1,17 +1,19 @@
 package com.example.healthapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 public class overallworkout extends AppCompatActivity {
+
+    private Button btnstart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,15 @@ public class overallworkout extends AppCompatActivity {
 
         YouTubePlayerView youTubePlayerView = findViewById(R.id.youtube_player_view);
         getLifecycle().addObserver(youTubePlayerView);
+        btnstart=findViewById(R.id.btn_start);
+
+        btnstart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(overallworkout.this,timerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

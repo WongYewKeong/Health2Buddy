@@ -89,5 +89,12 @@ Day 7: Legs\n\n
             app:layout_constraintHorizontal_bias="0.105"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_advance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Workout" />
+
     </LinearLayout>
 </ScrollView>

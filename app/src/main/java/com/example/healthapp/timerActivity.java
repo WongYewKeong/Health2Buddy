@@ -1,20 +1,34 @@
 package com.example.healthapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import net.crosp.libs.android.circletimeview.CircleTimeView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class timerActivity extends AppCompatActivity {
 
+    FirebaseAuth firebaseAuth;
+    FirebaseFirestore db;
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,21 +38,37 @@ public class timerActivity extends AppCompatActivity {
         CircleImageView circleImageView=findViewById(R.id.play);
         CircleImageView stop=findViewById(R.id.stop);
         EditText etduration=findViewById(R.id.et_duration);
-        if(etduration.getText().toString().isEmpty()){
-            circleTimeView.setCurrentTime(60);
-        }else {
-            circleTimeView.setCurrentTime(Long.parseLong(etduration.getText().toString()));
-        }
+        EditText etact=findViewById(R.id.et_activity);
+        Button save=findViewById(R.id.btn_saveactivity);
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        userId = firebaseAuth.getCurrentUser().getUid();
+
+
+            circleTimeView.setCurrentTime(0);
+
 
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etduration.getText().toString().isEmpty()){
-                    circleTimeView.setCurrentTime(60);
+                if(etduration.getText().toString().isEmpty()&&etact.getText().toString().isEmpty()){
+                    circleTimeView.setCurrentTime(0);
+                    Toast.makeText(timerActivity.this,"Please enter your activity and duration to start",Toast.LENGTH_SHORT).show();
                 }else {
                     circleTimeView.setCurrentTime(Long.parseLong(etduration.getText().toString()));
+                    circleTimeView.startTimer();
+
                 }
+
+            }
+        });
+        circleImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                long time=circleTimeView.getCurrentTimeInSeconds();
+                circleTimeView.setCurrentTime(time);
                 circleTimeView.startTimer();
+                return true;
             }
         });
 
@@ -62,6 +92,29 @@ public class timerActivity extends AppCompatActivity {
 
             @Override
             public void onTimerTimeValueChanged(long time) {
+
+            }
+        });
+
+        CollectionReference documentReference = db.collection("users").document(userId).collection("Activity");
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, Object> activity = new HashMap<>();
+                if(!etact.getText().toString().isEmpty()||!etduration.getText().toString().isEmpty()) {
+                    activity.put("Activity", etact.getText().toString());
+                    activity.put("Duration", etduration.getText().toString());
+                    documentReference.add(activity).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            Toast.makeText(timerActivity.this,"Activity added",Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                }else{
+                    Toast.makeText(timerActivity.this,"Please enter the activity and duration!",Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
