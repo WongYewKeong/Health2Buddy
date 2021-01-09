@@ -49,91 +49,89 @@ import java.util.List;
 import java.util.Map;
 
 public class JournalFragment extends Fragment {
-
-
+    
+    
     private FirebaseAuth firebaseAuth;
     GoogleSignInOptions gso;
     GoogleSignInClient signInClient;
-
+    
     Button btnSave, btnUpdate;
     EditText etTitle, etDescription;
     TextView tvJournalId;
     ListView lvJournal;
-
+    
     ArrayAdapter<String> journalListAdapter;
     ArrayList<String> journalArray;
     ArrayList<Integer> journalID;
-
+    
     public static MyJournalDB myJournalDB;
-
-
-
+    
+    
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        
         View root = inflater.inflate(R.layout.fragment_journal, container, false);
-
-
+        
+        
         btnSave = root.findViewById(R.id.btn_save);
         btnUpdate = root.findViewById(R.id.btn_update);
-
+        
         etTitle = root.findViewById(R.id.et_title);
         etDescription = root.findViewById(R.id.et_description);
-
+        
         tvJournalId = root.findViewById(R.id.tv_journal_id);
         lvJournal = root.findViewById(R.id.lv_main);
-
+        
         journalListAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
         journalArray = new ArrayList<String>();
         journalID = new ArrayList<Integer>();
-
+        
         myJournalDB = Room.databaseBuilder(getContext(), MyJournalDB.class, "MyJournalDB").build();
-
-
+        
+        
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editTextIsEmpty())
                     return;
                 saveJournal();
-
+                
             }
         });
-
-
-
+        
+        
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editTextIsEmpty())
+                if (editTextIsEmpty())
                     return;
                 updateJournal();
-
+                
             }
         });
-
+        
         lvJournal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tvJournalId.setText(journalID.get(i).toString());
-
+                
             }
         });
-
+        
         lvJournal.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long i) {
-
+                
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setTitle("Remove Journal");
-                alertDialogBuilder.setMessage("Are you sure you to remove the journal #" + journalID.get(position));
+                alertDialogBuilder.setMessage("Are you sure you want to remove the journal #" + journalID.get(position));
                 alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         // toast(getApplicationContext(),"Action Canceled");
                     }
                 });
-
+                
                 alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
@@ -141,20 +139,19 @@ public class JournalFragment extends Fragment {
                         deleteJournal(journal);
                     }
                 });
-
+                
                 alertDialogBuilder.show();
                 return true;
             }
         });
-
-
-
+        
+        
         return root;
-
+        
     }
-
+    
     public void saveJournal() {
-
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -164,11 +161,11 @@ public class JournalFragment extends Fragment {
                 getAllJournal();
             }
         }).start();
-
+        
     }
-
+    
     public void updateJournal() {
-
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -178,110 +175,100 @@ public class JournalFragment extends Fragment {
                 getAllJournal();
             }
         }).start();
-
-
-
+        
+        
     }
-
+    
     public void deleteJournal(final Journal jou) {
-
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
                 myJournalDB.journalDao().deleteJournal(jou);
                 toast(getActivity(), "Journal Removed");
                 getAllJournal();
-
+                
             }
         }).start();
-
-
-
+        
+        
     }
-
+    
     public void getAllJournal() {
-
+        
         journalID.clear();
         journalArray.clear();
-
+        
         new Thread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 List<Journal> journals = myJournalDB.journalDao().getAllJournals();
                 String journalInfor;
-                for(Journal journal:journals)
-                {
-                    journalInfor ="#" + journal.getJournalID() +
+                for (Journal journal : journals) {
+                    journalInfor = "#" + journal.getJournalID() +
                             "\nTitle: " + journal.getJournalTitle() +
                             "\nDescription: " + journal.getJournalDescription();
-
+                    
                     journalArray.add(journalInfor);
                     journalID.add(journal.getJournalID());
-
+                    
                 }
                 showDataInListView();
-
+                
             }
         }).start();
-
-
-
-
-
+        
+        
     }
-
+    
     public void showDataInListView() {
-
+        
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 journalListAdapter.clear();
                 journalListAdapter.addAll(journalArray);
                 lvJournal.setAdapter(journalListAdapter);
-
+                
             }
         });
-
+        
     }
-
-
-
-
+    
+    
     private boolean editTextIsEmpty() {
-
-        if(TextUtils.isEmpty(etTitle.getText().toString())){
+        
+        if (TextUtils.isEmpty(etTitle.getText().toString())) {
             etTitle.setError("Cannot be Empty");
         }
-
-        if(TextUtils.isEmpty(etDescription.getText().toString())){
+        
+        if (TextUtils.isEmpty(etDescription.getText().toString())) {
             etDescription.setError("Cannot be Empty");
         }
-
-        if(TextUtils.isEmpty(etTitle.getText().toString()) || TextUtils.isEmpty(etDescription.getText().toString()))
-        {
+        
+        if (TextUtils.isEmpty(etTitle.getText().toString()) || TextUtils.isEmpty(etDescription.getText().toString())) {
             return true;
         } else
             return false;
-
+        
     }
-
+    
     public void toast(final Context context, final String text) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         });
-
+        
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();
-
+        
         getAllJournal();
     }
-
+    
 }

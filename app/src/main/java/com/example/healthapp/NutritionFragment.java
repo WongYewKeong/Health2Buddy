@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -32,6 +33,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.healthapp.entities.Food;
+import com.example.healthapp.entities.Journal;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +65,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 public class NutritionFragment extends Fragment {
     
     // Variables
+    private String foodName;
     private double lowRangeCal, highRangeCal, REE, neededCarbs, neededProtein, neededFat;
     private double consumedCal, consumedCarbs, consumedProtein, consumedFat;
     
@@ -89,13 +92,15 @@ public class NutritionFragment extends Fragment {
     
     // Manually Add Views
     Button btn_add_nutrition_data;
-    EditText et_cal_nutrition, et_carbs_nutrition, et_protein_nutrition, et_fat_nutrition;
+    EditText et_food_name_nutrition, et_cal_nutrition, et_carbs_nutrition, et_protein_nutrition, et_fat_nutrition;
     
     // List view
     ListView lv_consumed_food_nutrition;
     ArrayAdapter<String> foodListAdapter;
     ArrayList<String> foodArray;
     ArrayList<String> foodID;
+    ArrayList<String> foodNameList;
+    ArrayList<Food> foodList;
     
     // FireStore
     FirebaseAuth firebaseAuth;
@@ -126,6 +131,7 @@ public class NutritionFragment extends Fragment {
         tv_protein_status_nutrition = root.findViewById(R.id.tv_protein_status_nutrition);
         
         // Add Intake Manually
+        et_food_name_nutrition = root.findViewById(R.id.et_food_name_nutrition);
         et_cal_nutrition = root.findViewById(R.id.et_cal_nutrition);
         et_carbs_nutrition = root.findViewById(R.id.et_carb_nutrition);
         et_protein_nutrition = root.findViewById(R.id.et_protein_nutrition);
@@ -137,6 +143,8 @@ public class NutritionFragment extends Fragment {
         foodListAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
         foodArray = new ArrayList<>();
         foodID = new ArrayList<>();
+        foodNameList = new ArrayList<>();
+        foodList = new ArrayList<>();
         
         // Search View
         sv_food = root.findViewById(R.id.sv_food);
@@ -152,6 +160,7 @@ public class NutritionFragment extends Fragment {
         DocumentReference documentReference = db.collection("users").document(userId);
         DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyRecord").document(date);
         
+        // Solve Scroll View Problem
         lv_consumed_food_nutrition.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -160,23 +169,34 @@ public class NutritionFragment extends Fragment {
             }
         });
         
+        lv_consumed_food_nutrition.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+                alertDialogBuilder.setTitle("Remove Food");
+                alertDialogBuilder.setMessage("Are you sure you want to remove the Food " + foodNameList.get(position));
+                alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                    }
+                });
+                
+                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        deleteConsumedFoodRecord(position);
+                    }
+                });
+                alertDialogBuilder.show();
+            }
+        });
+        
         btn_add_nutrition_data.setOnClickListener(view -> {
-            Map<String, Object> consumedNutrition = new HashMap<>();
-            consumedCal += Double.parseDouble(et_cal_nutrition.getText().toString());
-            consumedCarbs += Double.parseDouble(et_carbs_nutrition.getText().toString());
-            consumedFat += Double.parseDouble(et_fat_nutrition.getText().toString());
-            consumedProtein += Double.parseDouble(et_protein_nutrition.getText().toString());
-            
-            consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
-            consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
-            consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
-            consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
-            
-            db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+            addManualConsumedFoodRecord();
+            clearEditText();
         });
         
         if (sv_food != null) {
-            
             sv_food.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -236,7 +256,7 @@ public class NutritionFragment extends Fragment {
             }
         });
         
-        //Get today nutrition intake
+        // Get today nutrition intake
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -251,27 +271,33 @@ public class NutritionFragment extends Fragment {
                 }
             }
         });
-    
+        
+        // Get consumed Food
         db.collection("users").document(userId).collection("dailyRecord").document(date).collection("consumedFood").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 foodArray.clear();
                 foodID.clear();
+                foodNameList.clear();
+                foodList.clear();
                 Log.d("Debug", "Hello");
- 
+                
                 for (QueryDocumentSnapshot doc : value) {
-    
+                    
                     Map<String, Object> consumedNutrition = doc.getData();
                     String foodInfor;
                     
                     foodInfor = consumedNutrition.get("item_name").toString() +
-                                    "\nCal - " + consumedNutrition.get("nf_calories").toString() + " ," +
-                                    " Carb - " + consumedNutrition.get("nf_carb").toString() + " ," +
-                                    " Protein - " + consumedNutrition.get("nf_carb").toString() + " ," +
-                                    " Fat - " + consumedNutrition.get("nf_carb").toString() + " ";
-    
+                            "\nCal - " + consumedNutrition.get("nf_calories").toString() + " ," +
+                            " Carb - " + consumedNutrition.get("nf_carb").toString() + " ," +
+                            " Protein - " + consumedNutrition.get("nf_protein").toString() + " ," +
+                            " Fat - " + consumedNutrition.get("nf_total_fat").toString() + " ";
+                    
                     foodArray.add(foodInfor);
                     foodID.add(doc.getId());
+                    foodNameList.add(consumedNutrition.get("item_name").toString());
+                    
+                    foodList.add(new Food(consumedNutrition.get("item_name").toString(), Integer.parseInt(consumedNutrition.get("nf_calories").toString()), Integer.parseInt(consumedNutrition.get("nf_total_fat").toString()), Integer.parseInt(consumedNutrition.get("nf_protein").toString()), Integer.parseInt(consumedNutrition.get("nf_carb").toString())));
                 }
                 
                 showDataInListView();
@@ -313,7 +339,8 @@ public class NutritionFragment extends Fragment {
         } else {
             // Tell user to fill personal data.
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("You are required to fill the weight, height, age and gender, in order to use Nutrition Helper");
+            builder.setTitle("Personal Data Required");
+            builder.setMessage("You are required to fill the weight, height, age and gender, in order to use our Nutrition");
             builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -365,5 +392,59 @@ public class NutritionFragment extends Fragment {
         
     }
     
+    private void addManualConsumedFoodRecord() {
+        Map<String, Object> consumedFood = new HashMap<>();
+        foodName = et_food_name_nutrition.getText().toString();
+        int nf_calories = Integer.parseInt(et_cal_nutrition.getText().toString());
+        int nf_carb = Integer.parseInt(et_carbs_nutrition.getText().toString());
+        int nf_total_fat = Integer.parseInt(et_fat_nutrition.getText().toString());
+        int nf_protein = Integer.parseInt(et_protein_nutrition.getText().toString());
+        
+        consumedFood.put("item_name", foodName);
+        consumedFood.put("nf_calories", nf_calories);
+        consumedFood.put("nf_carb", nf_carb);
+        consumedFood.put("nf_protein", nf_protein);
+        consumedFood.put("nf_total_fat", nf_total_fat);
+        
+        db.collection("users").document(userId).collection("dailyRecord").document(date).collection("consumedFood").document().set(consumedFood);
+        
+        Map<String, Object> consumedNutrition = new HashMap<>();
+        
+        consumedCal += Double.parseDouble(et_cal_nutrition.getText().toString());
+        consumedCarbs += Double.parseDouble(et_carbs_nutrition.getText().toString());
+        consumedFat += Double.parseDouble(et_fat_nutrition.getText().toString());
+        consumedProtein += Double.parseDouble(et_protein_nutrition.getText().toString());
+        
+        consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
+        consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
+        consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
+        consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
+        
+        db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+    }
     
+    private void clearEditText() {
+        et_food_name_nutrition.setText("");
+        et_cal_nutrition.setText("");
+        et_protein_nutrition.setText("");
+        et_fat_nutrition.setText("");
+    }
+    
+    private void deleteConsumedFoodRecord(int position) {
+        // Deduct the current nutrition intake
+        consumedCal -= foodList.get(position).getNf_calories();
+        consumedCarbs -= foodList.get(position).getNf_carb();
+        consumedFat -= foodList.get(position).getNf_total_fat();
+        consumedProtein -= foodList.get(position).getNf_protein();
+        
+        Map<String, Object> consumedNutrition = new HashMap<>();
+        consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
+        consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
+        consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
+        consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
+        db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+        
+        // Delete the selected food
+        db.collection("users").document(userId).collection("dailyRecord").document(date).collection("consumedFood").document(foodID.get(position)).delete();
+    }
 }
