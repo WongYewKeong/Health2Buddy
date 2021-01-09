@@ -8,6 +8,14 @@ public class Food {
     public Food() {
     }
     
+    public Food(String item_name, int nf_calories, int nf_total_fat, int nf_protein, int nf_carb) {
+        this.item_name = item_name;
+        this.nf_calories = nf_calories;
+        this.nf_total_fat = nf_total_fat;
+        this.nf_protein = nf_protein;
+        this.nf_carb = nf_carb;
+    }
+    
     public Food(String item_name, String brand_name, int nf_calories, int nf_total_fat, int nf_protein, int nf_carb, int nf_serving_size_qty) {
         this.item_name = item_name;
         this.brand_name = brand_name;

@@ -3,15 +3,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_scroll_nutrition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_6"
-    android:fillViewport="true"
-    android:scrollbars="none"
     android:clickable="true"
-    android:focusableInTouchMode="true"
-    tools:context=".NutritionFragment"
-    android:focusable="true">
+    android:fillViewport="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:scrollbars="none"
+    tools:context=".NutritionFragment">
 
     <LinearLayout
         android:id="@+id/linear_layout_nutrition"
@@ -245,7 +246,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="8dp"
             app:cardCornerRadius="14dp"
             app:cardElevation="4dp"
@@ -254,24 +255,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView19"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:text="Your Consumed Food Today" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rc_food_consumed_nutrition"
+                <ListView
+                    android:id="@+id/lv_consumed_food_nutrition"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp" >
+                    android:layout_height="400dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1" />
 
-                </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

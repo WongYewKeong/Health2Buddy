@@ -10,32 +10,50 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.healthapp.entities.Food;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,12 +62,8 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class NutritionFragment extends Fragment {
     
-    SearchView sv_food;
-    
-    // Calculate from using weight, height and age.
+    // Variables
     private double lowRangeCal, highRangeCal, REE, neededCarbs, neededProtein, neededFat;
-    
-    // Get from firestore, update when new food added
     private double consumedCal, consumedCarbs, consumedProtein, consumedFat;
     
     // Get from firestore
@@ -57,21 +71,33 @@ public class NutritionFragment extends Fragment {
     private int age;
     private String gender;
     
-    // double format
+    // Others
     DecimalFormat df = new DecimalFormat("0");
-    
-    // Variables
     String date, date2;
     String userId;
+    Date currentTime;
     
-    // Views
-    TextView tv_carbs_status_nutrition, tv_fat_status_nutrition, tv_protein_status_nutrition;
+    ScrollView parent_scroll_nutrition;
+    
+    // Search View
+    SearchView sv_food;
+    
+    // Progress Views
+    TextView tv_carbs_status_nutrition, tv_fat_status_nutrition, tv_protein_status_nutrition, tv_cal_nutrition;
     ProgressBar pb_cal_nutrition, pb_carbs_nutrition, pb_protein_nutrition, pb_fat_nutrition;
-    TextView tv_pb_nutrition, tv_date_nutrition;
+    TextView tv_date_nutrition;
+    
+    // Manually Add Views
     Button btn_add_nutrition_data;
     EditText et_cal_nutrition, et_carbs_nutrition, et_protein_nutrition, et_fat_nutrition;
     
-    // Firestore
+    // List view
+    ListView lv_consumed_food_nutrition;
+    ArrayAdapter<String> foodListAdapter;
+    ArrayList<String> foodArray;
+    ArrayList<String> foodID;
+    
+    // FireStore
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
     
@@ -80,13 +106,12 @@ public class NutritionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_nutrition, container, false);
         
+        parent_scroll_nutrition = root.findViewById(R.id.parent_scroll_nutrition);
+        
+        // Date View
+        currentTime = Calendar.getInstance().getTime();
         date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
         date2 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        
-        // Text Views
-        tv_carbs_status_nutrition = root.findViewById(R.id.tv_carbs_status_nutrition);
-        tv_fat_status_nutrition = root.findViewById(R.id.tv_fat_status_nutrition);
-        tv_protein_status_nutrition = root.findViewById(R.id.tv_protein_status_nutrition);
         tv_date_nutrition = root.findViewById(R.id.tv_date_nutrition);
         tv_date_nutrition.setText(date2);
         
@@ -95,35 +120,59 @@ public class NutritionFragment extends Fragment {
         pb_carbs_nutrition = root.findViewById(R.id.pb_carb_nutrition);
         pb_fat_nutrition = root.findViewById(R.id.pb_fat_nutrition);
         pb_protein_nutrition = root.findViewById(R.id.pb_protein_nutrition);
-        tv_pb_nutrition = root.findViewById(R.id.tv_pb_cal_nutrition);
+        tv_cal_nutrition = root.findViewById(R.id.tv_pb_cal_nutrition);
+        tv_carbs_status_nutrition = root.findViewById(R.id.tv_carbs_status_nutrition);
+        tv_fat_status_nutrition = root.findViewById(R.id.tv_fat_status_nutrition);
+        tv_protein_status_nutrition = root.findViewById(R.id.tv_protein_status_nutrition);
         
+        // Add Intake Manually
         et_cal_nutrition = root.findViewById(R.id.et_cal_nutrition);
         et_carbs_nutrition = root.findViewById(R.id.et_carb_nutrition);
         et_protein_nutrition = root.findViewById(R.id.et_protein_nutrition);
         et_fat_nutrition = root.findViewById(R.id.et_fat_nutrition);
         btn_add_nutrition_data = root.findViewById(R.id.btn_add_nutrition_data);
         
+        // Food List View
+        lv_consumed_food_nutrition = root.findViewById(R.id.lv_consumed_food_nutrition);
+        foodListAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
+        foodArray = new ArrayList<>();
+        foodID = new ArrayList<>();
+        
+        // Search View
         sv_food = root.findViewById(R.id.sv_food);
         sv_food.setIconifiedByDefault(false);
         sv_food.setSubmitButtonEnabled(true);
         sv_food.setQueryHint("Search food here");
         
-        btn_add_nutrition_data.setOnClickListener(new View.OnClickListener() {
+        // Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        userId = firebaseAuth.getCurrentUser().getUid();
+        
+        DocumentReference documentReference = db.collection("users").document(userId);
+        DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyRecord").document(date);
+        
+        lv_consumed_food_nutrition.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Map<String, Object> consumedNutrition = new HashMap<>();
-                consumedCal += Double.parseDouble(et_cal_nutrition.getText().toString());
-                consumedCarbs += Double.parseDouble(et_carbs_nutrition.getText().toString());
-                consumedFat += Double.parseDouble(et_fat_nutrition.getText().toString());
-                consumedProtein += Double.parseDouble(et_protein_nutrition.getText().toString());
-                
-                consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
-                consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
-                consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
-                consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
-                
-                db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
+        });
+        
+        btn_add_nutrition_data.setOnClickListener(view -> {
+            Map<String, Object> consumedNutrition = new HashMap<>();
+            consumedCal += Double.parseDouble(et_cal_nutrition.getText().toString());
+            consumedCarbs += Double.parseDouble(et_carbs_nutrition.getText().toString());
+            consumedFat += Double.parseDouble(et_fat_nutrition.getText().toString());
+            consumedProtein += Double.parseDouble(et_protein_nutrition.getText().toString());
+            
+            consumedNutrition.put("consumedCal", String.valueOf(consumedCal));
+            consumedNutrition.put("consumedCarbs", String.valueOf(consumedCarbs));
+            consumedNutrition.put("consumedFat", String.valueOf(consumedFat));
+            consumedNutrition.put("consumedProtein", String.valueOf(consumedProtein));
+            
+            db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
         });
         
         if (sv_food != null) {
@@ -148,13 +197,8 @@ public class NutritionFragment extends Fragment {
             });
         }
         
-        firebaseAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        userId = firebaseAuth.getCurrentUser().getUid();
         
-        DocumentReference documentReference = db.collection("users").document(userId);
-        DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyRecord").document(date);
-        
+        // Calculate the needed nutrition intake of user
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             
             @Override
@@ -175,6 +219,7 @@ public class NutritionFragment extends Fragment {
             }
         });
         
+        // Check if document for today's record exist, if not, create a new document.
         documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -191,6 +236,7 @@ public class NutritionFragment extends Fragment {
             }
         });
         
+        //Get today nutrition intake
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -205,7 +251,32 @@ public class NutritionFragment extends Fragment {
                 }
             }
         });
-        
+    
+        db.collection("users").document(userId).collection("dailyRecord").document(date).collection("consumedFood").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                foodArray.clear();
+                foodID.clear();
+                Log.d("Debug", "Hello");
+ 
+                for (QueryDocumentSnapshot doc : value) {
+    
+                    Map<String, Object> consumedNutrition = doc.getData();
+                    String foodInfor;
+                    
+                    foodInfor = consumedNutrition.get("item_name").toString() +
+                                    "\nCal - " + consumedNutrition.get("nf_calories").toString() + " ," +
+                                    " Carb - " + consumedNutrition.get("nf_carb").toString() + " ," +
+                                    " Protein - " + consumedNutrition.get("nf_carb").toString() + " ," +
+                                    " Fat - " + consumedNutrition.get("nf_carb").toString() + " ";
+    
+                    foodArray.add(foodInfor);
+                    foodID.add(doc.getId());
+                }
+                
+                showDataInListView();
+            }
+        });
         return root;
     }
     
@@ -258,7 +329,7 @@ public class NutritionFragment extends Fragment {
         tv_carbs_status_nutrition.setText((df.format(consumedCarbs) + "/" + df.format(neededCarbs) + " Carbs"));
         tv_fat_status_nutrition.setText((df.format(consumedFat) + "/" + df.format(neededFat) + " Fat"));
         tv_protein_status_nutrition.setText((df.format(consumedProtein) + "/" + df.format(neededProtein) + " Protein"));
-        tv_pb_nutrition.setText((df.format(consumedCal) + "/" + df.format(lowRangeCal) + " Cal"));
+        tv_cal_nutrition.setText((df.format(consumedCal) + "/" + df.format(lowRangeCal) + " Cal"));
         // Progress Bar
         pb_cal_nutrition.setProgress((int) consumedCal);
         pb_cal_nutrition.setMax((int) lowRangeCal);
@@ -279,6 +350,19 @@ public class NutritionFragment extends Fragment {
         consumedNutrition.put("consumedProtein", "0");
         
         db.collection("users").document(userId).collection("dailyRecord").document(date).set(consumedNutrition);
+    }
+    
+    public void showDataInListView() {
+        
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                foodListAdapter.clear();
+                foodListAdapter.addAll(foodArray);
+                lv_consumed_food_nutrition.setAdapter(foodListAdapter);
+            }
+        });
+        
     }
     
     
