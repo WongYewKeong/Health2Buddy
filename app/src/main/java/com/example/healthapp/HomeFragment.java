@@ -256,6 +256,17 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                 Bmi.setText(String.valueOf(df.format(bmi)) + " Kg/m\u00B2");
 
+                if (goalnum == stepCount ){
+                    goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
+                }
+
+                else if (stepCount < goalnum){
+                    goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+                }
+                else if (stepCount >= goalnum){
+                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                }
+
                 documentReference.update("BMI", String.valueOf(df.format(bmi)));
 
                 if(getActivity()!=null&&isAdded()) {
@@ -268,23 +279,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     } else if (bmi >= 25 && bmi < 30) {
                         bmiStatus.setText("Overweight");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.overweight));
-                    } else if(bmi>=30){
+                    } else if (bmi >= 30) {
                         bmiStatus.setText("Obese");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.obese));
-                    }else{
+                    } else {
                         bmiStatus.setText("No data");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.teal_200));
                     }
-                }
-                if (goalnum == stepCount ){
-                    goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-                }
-
-                else if (stepCount < goalnum){
-                    goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-                }
-                else if (stepCount >= goalnum){
-                    goalnotification.setText("Congratulation! You have reached your goal of steps count!");
                 }
             }
 
