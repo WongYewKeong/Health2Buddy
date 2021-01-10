@@ -44,7 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
-
+    
     private TextView stepcount, calories, distance, user, weight, height, Bmi, bmiStatus, goal, goalnotification;
     private ImageView information;
     private SensorManager sensorManager;
@@ -58,19 +58,19 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     double heightnum, bmi;
     DecimalFormat df = new DecimalFormat("0.00");
     static final int REQUEST_CODE = 123;
-    int numstep=0;
+    int numstep = 0;
     String date;
     String userId;
-
-
+    
+    
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-
+        
         date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
         Log.d("Debug", "Today: " + date);
-
+        
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         stepcount = root.findViewById(R.id.tv_steps);
         calories = root.findViewById(R.id.tv_calories);
@@ -89,12 +89,12 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
-
-
+        
+        
         DocumentReference documentReference = db.collection("users").document(userId);
         DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
-
-
+        
+        
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACTIVITY_RECOGNITION)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 alertDialog.show();
             }
         }
-
+        
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             stepcounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -120,35 +120,35 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             stepcount.setText("Counter sensor is not present");
             isSensorPresent = false;
         }
-
+        
         btnEditWeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter your weight (in Kg)");
-
-
+                
+                
                 final EditText input = new EditText(getActivity());
-
+                
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(input);
-
-
+                
+                
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-
-
+                    
+                    
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-
-                            if (!input.getText().toString().isEmpty()) {
-
-                                documentReference.update("Weight", input.getText().toString());
-                            } else {
-                                dialog.cancel();
-                            }
+                        
+                        
+                        if (!input.getText().toString().isEmpty()) {
+                            
+                            documentReference.update("Weight", input.getText().toString());
+                        } else {
+                            dialog.cancel();
                         }
+                    }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -156,65 +156,65 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                         dialog.cancel();
                     }
                 });
-
+                
                 builder.show();
             }
         });
-
+        
         btnEditHeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter your height (in Cm)");
-
-
+                
+                
                 final EditText height = new EditText(getActivity());
-
+                
                 height.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(height);
-
-
+                
+                
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-
-
+                    
+                    
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!height.getText().toString().isEmpty()) {
                             documentReference.update("Height", height.getText().toString());
-                        }else{
+                        } else {
                             dialog.cancel();
                         }
                     }
                 });
-
+                
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-
+                
                 builder.show();
-
+                
             }
         });
-
-        btnEditGoal.setOnClickListener(new View.OnClickListener(){
+        
+        btnEditGoal.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View view){
+            public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter your goal of steps count");
-
-
+                
+                
                 final EditText goal = new EditText(getActivity());
-
+                
                 goal.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(goal);
-
-
+                
+                
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-
-
+                    
+                    
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!goal.getText().toString().isEmpty()) {
@@ -224,43 +224,42 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                         }
                     }
                 });
-
+                
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-
+                
                 builder.show();
             }
         });
-
+        
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(error!=null){
+                if (error != null) {
                     return;
                 }
-
+                
                 goal.setText(value.getString("Goal of steps count"));
                 weight.setText(value.getString("Weight") + " Kg");
                 height.setText(value.getString("Height") + " Cm");
                 user.setText(value.getString("Username"));
-
+                
                 goalnum = Integer.parseInt(value.getString("Goal of steps count"));
                 weightnum = Integer.parseInt(value.getString("Weight"));
                 heightnum = Double.parseDouble(value.getString("Height")) / 100;
                 bmi = weightnum / (heightnum * heightnum);
-
-
+                
+                
                 Bmi.setText(String.valueOf(df.format(bmi)) + " Kg/m\u00B2");
-
-
-
+                
+                
                 documentReference.update("BMI", String.valueOf(df.format(bmi)));
-
-                if(getActivity()!=null&&isAdded()) {
+                
+                if (getActivity() != null && isAdded()) {
                     if (bmi < 18.5) {
                         bmiStatus.setText("Underweight");
                         bmiStatus.setBackgroundColor(getActivity().getResources().getColor(R.color.underweight));
@@ -279,13 +278,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     }
                 }
             }
-
+            
         });
-
+        
         documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-               if (task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("Debug", "Document exists!");
@@ -297,26 +296,23 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 }
             }
         });
-
+        
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 try {
                     //stepCount = Integer.parseInt(value.getString("stepCount"));
                     stepcount.setText(value.getString("stepCount"));
-                    if (goalnum == 0 ){
+                    if (goalnum == 0) {
                         goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-                    }
-
-                    else if (Integer.parseInt(value.getString("stepCount")) < goalnum){
+                    } else if (Integer.parseInt(value.getString("stepCount")) < goalnum) {
                         goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-                    }
-                    else if (Integer.parseInt(value.getString("stepCount")) >= goalnum){
+                    } else if (Integer.parseInt(value.getString("stepCount")) >= goalnum) {
                         goalnotification.setText("Congratulation! You have reached your goal of steps count!");
                     }
-                    int cal = (int) ((int) (Integer.parseInt(value.getString("stepCount"))) * 0.045);
+                    int cal = (int) ((Double.parseDouble(value.getString("stepCount"))) * 0.045);
                     calories.setText(String.valueOf(cal) + " calories");
-                    int feet = (int) ((int) (Integer.parseInt(value.getString("stepCount")))* 2.5);
+                    int feet = (int) ((Double.parseDouble(value.getString("stepCount"))) * 2.5);
                     String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
                     distance.setText(finaldistance + " km");
                     //onSensorChanged();
@@ -325,67 +321,68 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 }
             }
         });
-
+        
         information.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                builder.setMessage(R.string.Info).setTitle("Information").setPositiveButton("OK",null);
-
-                AlertDialog dialog=builder.create();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.Info).setTitle("Information").setPositiveButton("OK", null);
+                
+                AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });
-
-
+        
+        
         return root;
     }
-    int total=0;
+    
+    int total = 0;
+    
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor == stepcounter&&isAdded()) {
-
-            stepCount=numstep++;
+        if (sensorEvent.sensor == stepcounter && isAdded()) {
+            
+            stepCount = numstep++;
             DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
-
-                    documentReference2.update("stepCount",String.valueOf(stepCount));
-
-
-
-           //stepCount = (int) sensorEvent.values[0];
+            
+            documentReference2.update("stepCount", String.valueOf(stepCount));
+            
+            
+            //stepCount = (int) sensorEvent.values[0];
             //stepcount.setText(String.valueOf(stepCount));
-
+            
         }
-
+        
     }
-
+    
     public void onAccuracyChanged(Sensor sensor, int i) {
-
+    
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.registerListener(this, stepcounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
-
+        
     }
-
+    
     @Override
     public void onPause() {
         super.onPause();
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
-           sensorManager.unregisterListener(this, stepcounter);
+            sensorManager.unregisterListener(this, stepcounter);
         }
     }
-
+    
     private void createTodayRecord() {
-         //Create the FireStore document for today record
+        //Create the FireStore document for today record
         Map<String, Object> totalstepcount = new HashMap<>();
         totalstepcount.put("stepCount", "0");
-
+        
         db.collection("users").document(userId).collection("dailyStep").document(date).set(totalstepcount);
     }
-
-
+    
+    
 }
