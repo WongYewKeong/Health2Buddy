@@ -116,7 +116,7 @@ public class UserFragment extends Fragment {
 
     private void ShowGenderOptions() {
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(UserFragment.this);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         builder.setTitle("Select your gender");
         builder.setSingleChoiceItems(gender, sharedPref.getInt(SP_GENDER, 0), new DialogInterface.OnClickListener() {
             @Override
