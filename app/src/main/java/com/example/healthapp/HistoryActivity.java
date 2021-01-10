@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,12 +43,18 @@ public class HistoryActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Workout>options=new FirestoreRecyclerOptions.Builder<Workout>().setQuery(query,Workout.class).build();
 
         adapter= new FirestoreRecyclerAdapter<Workout, WorkoutViewHolder>(options) {
+
+            public void deleteItem(int position){
+                getSnapshots().getSnapshot(position).getReference().delete();
+            }
+
             @NonNull
             @Override
             public WorkoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_single,parent,false);
                 return new WorkoutViewHolder(view);
             }
+
 
             @Override
             protected void onBindViewHolder(@NonNull WorkoutViewHolder holder, int position, @NonNull Workout model) {
@@ -57,13 +64,30 @@ public class HistoryActivity extends AppCompatActivity {
                 }else{
                     holder.list_duration.setText("Duration : "+Integer.parseInt(model.getDuration())/60+" minutes "+Integer.parseInt(model.getDuration())%60+ " seconds");
                 }
+
             }
+
+
         };
         historylist.setHasFixedSize(true);
         historylist.setLayoutManager(new LinearLayoutManager(this));
         historylist.setAdapter(adapter);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    
+
+            }
+        }).attachToRecyclerView(historylist);
+
 
     }
+
         private class WorkoutViewHolder extends RecyclerView.ViewHolder{
             private TextView list_workout;
             private TextView list_duration;
@@ -74,6 +98,8 @@ public class HistoryActivity extends AppCompatActivity {
                 list_duration=itemView.findViewById(R.id.list_duration);
             }
         }
+
+
 
     @Override
     protected void onStart() {
@@ -94,5 +120,11 @@ public class HistoryActivity extends AppCompatActivity {
                 finish();
         }
         return super.onOptionsItemSelected(item);
+
+
     }
+
+
+
+
 }
