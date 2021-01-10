@@ -119,6 +119,8 @@ public class timerActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<DocumentReference> task) {
                             Toast.makeText(timerActivity.this,"Activity added",Toast.LENGTH_SHORT).show();
+                            etact.setText("");
+                            etduration.setText("");
 
                         }
                     });

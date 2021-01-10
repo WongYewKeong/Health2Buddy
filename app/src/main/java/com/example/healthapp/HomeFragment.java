@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private Sensor stepcounter;
     private boolean isSensorPresent;
     private Button btnEditWeight, btnEditHeight, btnEditGoal, btnRecordStepsCount;
-    int stepCount = 0;
+    int stepCount ;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
     int weightnum, goalnum;
@@ -313,7 +313,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 try {
-                    //stepCount = Integer.parseInt(value.getString("stepCount"));
+                    stepCount = Integer.parseInt(value.getString("stepCount"));
                     stepcount.setText(value.getString("stepCount"));
                     if (goalnum == 0) {
                         goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
@@ -354,7 +354,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor == stepcounter && isAdded()) {
             
-            stepCount = numstep++;
+            //stepCount = numstep++;
+            stepCount++;
             DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
             
             documentReference2.update("stepCount", String.valueOf(stepCount));

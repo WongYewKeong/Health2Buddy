@@ -7,8 +7,8 @@
     <string name="facebook_app_id">303296101058529</string>
     <string name="fb_login_protocol_scheme">fb303296101058529</string>
     <string name="Info">1. The step counter requires step sensor in order to function normally.
-        \n\n2. The step counter initially show your steps since last reboot time.
-    \n\n3. To reset the step counter, you may need to reboot your device.
+        \n\n2. The step counter will be reset to 0 everyday.
+    \n\n3. The accuracy of the steps count depend on your device sensor.
     \n\n4. The step counter only function when you keep the app open.</string>
 
 
