@@ -112,7 +112,7 @@ public class timerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Map<String, Object> activity = new HashMap<>();
-                if(!etact.getText().toString().isEmpty()||!etduration.getText().toString().isEmpty()) {
+                if(!etact.getText().toString().isEmpty()&&!etduration.getText().toString().isEmpty()) {
                     activity.put("Activity", etact.getText().toString());
                     activity.put("Duration", etduration.getText().toString());
                     documentReference.add(activity).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
