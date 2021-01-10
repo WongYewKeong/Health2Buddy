@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor stepcounter;
     private boolean isSensorPresent;
-    private Button btnEditWeight, btnEditHeight, btnEditGoal;
+    private Button btnEditWeight, btnEditHeight, btnEditGoal, btnViewRecord;
     int stepCount = 0;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
@@ -78,6 +79,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         btnEditWeight = root.findViewById(R.id.btn_edit_weight);
         btnEditHeight = root.findViewById(R.id.btn_edit_height);
         btnEditGoal = root.findViewById(R.id.btn_edit_goal);
+        btnViewRecord = root.findViewById(R.id.btn_view_count);
         goal = root.findViewById(R.id.tv_goal);
         goalnotification = root.findViewById(R.id.tv_goal_notification);
         weight = root.findViewById(R.id.tv_weight);
@@ -120,6 +122,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             stepcount.setText("Counter sensor is not present");
             isSensorPresent = false;
         }
+
+        btnViewRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+               Intent intent = new Intent(getActivity(), StepsCountRecord.class);
+               startActivity(intent);
+
+            }
+        });
 
         btnEditWeight.setOnClickListener(new View.OnClickListener() {
             @Override
