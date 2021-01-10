@@ -192,19 +192,19 @@ public class NutritionFragment extends Fragment {
         });
         
         btn_add_nutrition_data.setOnClickListener(view -> {
-            if (!et_food_name_nutrition.getText().toString().equals("") && !et_cal_nutrition.getText().toString().equals("") && !et_carbs_nutrition.getText().toString().equals("") && !et_protein_nutrition.getText().toString().equals("") && !et_fat_nutrition.getText().toString().equals("")){
+            if (!et_food_name_nutrition.getText().toString().equals("") && !et_cal_nutrition.getText().toString().equals("") && !et_carbs_nutrition.getText().toString().equals("") && !et_protein_nutrition.getText().toString().equals("") && !et_fat_nutrition.getText().toString().equals("")) {
                 addManualConsumedFoodRecord();
                 clearEditText();
             } else {
-                if(et_food_name_nutrition.getText().toString().equals(""))
+                if (et_food_name_nutrition.getText().toString().equals(""))
                     et_food_name_nutrition.setError("Cannot be Empty");
-                if(et_cal_nutrition.getText().toString().equals(""))
+                if (et_cal_nutrition.getText().toString().equals(""))
                     et_cal_nutrition.setError("Cannot be Empty");
-                if(et_carbs_nutrition.getText().toString().equals(""))
+                if (et_carbs_nutrition.getText().toString().equals(""))
                     et_carbs_nutrition.setError("Cannot be Empty");
-                if(et_protein_nutrition.getText().toString().equals(""))
+                if (et_protein_nutrition.getText().toString().equals(""))
                     et_protein_nutrition.setError("Cannot be Empty");
-                if(et_fat_nutrition.getText().toString().equals(""))
+                if (et_fat_nutrition.getText().toString().equals(""))
                     et_fat_nutrition.setError("Cannot Empty");
             }
             
@@ -238,18 +238,21 @@ public class NutritionFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 
-                weight = Double.parseDouble(value.getString("Weight"));
-                height = Double.parseDouble(value.getString("Height"));
-                
-                //age = Integer.parseInt(value.getString("Age"));
-                //gender = value.getString("Gender");
-                
-                // Waiting Mai firestore
-                age = 50;
-                gender = "Male";
-                
-                Log.d("Debug", "OK");
-                calculateNeededNutrition();
+                try {
+                    weight = Double.parseDouble(value.getString("Weight"));
+                    height = Double.parseDouble(value.getString("Height"));
+                    
+                    //age = Integer.parseInt(value.getString("Age"));
+                    //gender = value.getString("Gender");
+                    
+                    // Waiting Mai firestore
+                    age = 50;
+                    gender = "Male";
+                    
+                    calculateNeededNutrition();
+                } catch (NullPointerException e) {
+                    Log.d("Debug", "Nutrition:" + e.getMessage());
+                }
             }
         });
         
@@ -281,7 +284,7 @@ public class NutritionFragment extends Fragment {
                     consumedProtein = Double.parseDouble(value.getString("consumedProtein"));
                     displayNutritionData();
                 } catch (NullPointerException e) {
-                    Log.d("Debug", e.getMessage());
+                    Log.d("Debug", "Nutrition:" + e.getMessage());
                 }
             }
         });
@@ -290,31 +293,37 @@ public class NutritionFragment extends Fragment {
         db.collection("users").document(userId).collection("dailyRecord").document(date).collection("consumedFood").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                foodArray.clear();
-                foodID.clear();
-                foodNameList.clear();
-                foodList.clear();
-                Log.d("Debug", "Hello");
                 
-                for (QueryDocumentSnapshot doc : value) {
+                try {
+                    foodArray.clear();
+                    foodID.clear();
+                    foodNameList.clear();
+                    foodList.clear();
                     
-                    Map<String, Object> consumedNutrition = doc.getData();
-                    String foodInfor;
+                    for (QueryDocumentSnapshot doc : value) {
+                        
+                        Map<String, Object> consumedNutrition = doc.getData();
+                        String foodInfor;
+                        
+                        foodInfor = consumedNutrition.get("item_name").toString() +
+                                "\n" + consumedNutrition.get("nf_calories").toString() + " Cal," +
+                                " " + consumedNutrition.get("nf_carb").toString() + " Carb," +
+                                " " + consumedNutrition.get("nf_protein").toString() + " Protein," +
+                                " " + consumedNutrition.get("nf_total_fat").toString() + " Fat";
+                        
+                        foodArray.add(foodInfor);
+                        foodID.add(doc.getId());
+                        foodNameList.add(consumedNutrition.get("item_name").toString());
+                        
+                        foodList.add(new Food(consumedNutrition.get("item_name").toString(), Integer.parseInt(consumedNutrition.get("nf_calories").toString()), Integer.parseInt(consumedNutrition.get("nf_total_fat").toString()), Integer.parseInt(consumedNutrition.get("nf_protein").toString()), Integer.parseInt(consumedNutrition.get("nf_carb").toString())));
+                    }
                     
-                    foodInfor = consumedNutrition.get("item_name").toString() +
-                            "\n" + consumedNutrition.get("nf_calories").toString() + " Cal," +
-                            " " + consumedNutrition.get("nf_carb").toString() + " Carb," +
-                            " " + consumedNutrition.get("nf_protein").toString() + " Protein," +
-                            " " + consumedNutrition.get("nf_total_fat").toString() + " Fat";
-                    
-                    foodArray.add(foodInfor);
-                    foodID.add(doc.getId());
-                    foodNameList.add(consumedNutrition.get("item_name").toString());
-                    
-                    foodList.add(new Food(consumedNutrition.get("item_name").toString(), Integer.parseInt(consumedNutrition.get("nf_calories").toString()), Integer.parseInt(consumedNutrition.get("nf_total_fat").toString()), Integer.parseInt(consumedNutrition.get("nf_protein").toString()), Integer.parseInt(consumedNutrition.get("nf_carb").toString())));
+                    showDataInListView();
+                } catch (NullPointerException e) {
+                    Log.d("Debug", "Nutrition: " + e.getMessage());
                 }
                 
-                showDataInListView();
+                
             }
         });
         return root;
@@ -394,20 +403,9 @@ public class NutritionFragment extends Fragment {
     }
     
     public void showDataInListView() {
-    
         foodListAdapter.clear();
         foodListAdapter.addAll(foodArray);
         lv_consumed_food_nutrition.setAdapter(foodListAdapter);
-        /*
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            
-            }
-        });
-        
-         */
-        
     }
     
     private void addManualConsumedFoodRecord() {
