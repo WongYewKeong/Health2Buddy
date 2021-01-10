@@ -242,12 +242,8 @@ public class NutritionFragment extends Fragment {
                     weight = Double.parseDouble(value.getString("Weight"));
                     height = Double.parseDouble(value.getString("Height"));
                     
-                    //age = Integer.parseInt(value.getString("Age"));
-                    //gender = value.getString("Gender");
-                    
-                    // Waiting Mai firestore
-                    age = 50;
-                    gender = "Male";
+                    age = Integer.parseInt(value.getString("Age"));
+                    gender = value.getString("Gender");
                     
                     calculateNeededNutrition();
                 } catch (NullPointerException e) {
