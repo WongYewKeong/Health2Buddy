@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthApp">
-        <activity android:name=".HistoryActivity"
-            android:label="History"/>
+        <activity android:name=".StepsCountRecord"></activity>
+        <activity
+            android:name=".HistoryActivity"
+            android:label="History" />
         <activity
             android:name=".timerActivity"
             android:label="Custom Workout Timer" />
