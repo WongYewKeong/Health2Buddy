@@ -29,7 +29,9 @@
                 android:id="@+id/tv_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="4dp"
                 android:text="Steps Count Record"
+                android:textColor="#01579B"
                 android:textSize="24sp" />
 
             <ListView
