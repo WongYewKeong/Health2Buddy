@@ -80,7 +80,7 @@ public class StepsCountRecord extends AppCompatActivity {
                     String stepInfor;
 
                     stepInfor = "Date: " + doc.getId() +
-                            "\n Steps Count: " + stepsCountHM.get("stepCount").toString();
+                            "\nSteps Count: " + stepsCountHM.get("stepCount").toString();
 
                     stepsArray.add(stepInfor);
             }
