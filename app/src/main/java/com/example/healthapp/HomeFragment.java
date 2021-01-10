@@ -243,6 +243,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     return;
                 }
 
+
                 goal.setText(value.getString("Goal of steps count"));
                 weight.setText(value.getString("Weight") + " Kg");
                 height.setText(value.getString("Height") + " Cm");
