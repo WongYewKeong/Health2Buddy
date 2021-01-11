@@ -71,7 +71,7 @@ public class NutritionFragment extends Fragment {
     
     // Get from firestore
     private double weight, height;
-    private int age;
+    private double age;
     private String gender;
     
     // Others
@@ -242,7 +242,7 @@ public class NutritionFragment extends Fragment {
                     weight = Double.parseDouble(value.getString("Weight"));
                     height = Double.parseDouble(value.getString("Height"));
                     
-                    age = Integer.parseInt(value.getString("Age"));
+                    age = Double.parseDouble(value.getString("Age"));
                     gender = value.getString("Gender");
                     
                     calculateNeededNutrition();
@@ -335,7 +335,7 @@ public class NutritionFragment extends Fragment {
     
     private void calculateNeededNutrition() {
         // Execute if all required data provided
-        if (!TextUtils.isEmpty(gender) && weight > 0 && height > 0 && age > 0) {
+        if (!gender.equals("") && weight > 0 && height > 0 && age > 0) {
             // Calculate REE, REE is the amount of calories you burn if you lie motionless in bed all day.
             if (gender.equals("Male")) {
                 REE = 66 + (13.7 * weight) + (5.0 * height) - (6.8 * age);

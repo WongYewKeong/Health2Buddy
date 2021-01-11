@@ -97,6 +97,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 user.put("Weight","0");
                                 user.put("Height","0");
                                 user.put("Goal of steps count","0");
+                                user.put("Age", "0");
+                                user.put("Gender", "");
 
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
