@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         Bmi = root.findViewById(R.id.tv_bmi);
         bmiStatus = root.findViewById(R.id.tv_bmi_status);
         information = root.findViewById(R.id.img_info);
-        user = root.findViewById(R.id.username);
+        user = root.findViewById(R.id.tv_name);
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();

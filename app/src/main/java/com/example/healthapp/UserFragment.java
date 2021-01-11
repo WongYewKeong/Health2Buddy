@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,10 +44,9 @@ public class UserFragment extends Fragment {
     GoogleSignInOptions gso;
     GoogleSignInClient signInClient;
 
-    ConstraintLayout cl_userage, cl_usergender;
+    LinearLayout ll_userage, ll_usergender;
 
     TextView tvName,tvAge,tvGender;
-    Button btnUpdate;
     ImageView profile;
     FirebaseFirestore db;
 
@@ -73,9 +73,9 @@ public class UserFragment extends Fragment {
         tvName = root.findViewById(R.id.tv_name);
         tvGender = root.findViewById(R.id.tv_gender);
         tvAge = root.findViewById(R.id.tv_age);
-        profile=root.findViewById(R.id.iv_profilepicture);
-        cl_userage = root.findViewById(R.id.cl_user_age);
-        cl_usergender = root.findViewById(R.id.cl_user_gender);
+        profile=root.findViewById(R.id.im_profile);
+        ll_userage = root.findViewById(R.id.ll_age);
+        ll_usergender = root.findViewById(R.id.ll_gender);
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -119,10 +119,17 @@ public class UserFragment extends Fragment {
         });
 
 
+        tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
 
-        cl_userage.setOnClickListener(new View.OnClickListener() {
+
+        ll_userage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -143,7 +150,7 @@ public class UserFragment extends Fragment {
 
 
 
-        cl_usergender.setOnClickListener(new View.OnClickListener() {
+        ll_usergender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShowGenderOptions();
