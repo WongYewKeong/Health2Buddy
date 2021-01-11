@@ -314,7 +314,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 Log.d("Debug", "Read Steps Count");
-                Log.d("Debug", "StepCount: "+value.getString("stepCount"));
+                //Log.d("Debug", "StepCount: "+value.getString("stepCount"));
                 try {
                     if(value.getString("stepCount")!=null){
                         stepCount = Integer.parseInt(value.getString("stepCount"));
