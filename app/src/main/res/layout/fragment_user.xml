@@ -37,7 +37,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:innerRadius="0dp"
         app:cardBackgroundColor="#FFFFFF"
 
@@ -49,6 +49,8 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            app:srcCompat="@drawable/imguser"
             tools:src="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
 
@@ -63,10 +65,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:drawableRight="@drawable/pencil"
+            android:drawablePadding="10dp"
             android:fontFamily="cursive"
-            android:text="Test"
+            android:gravity="center"
             android:textColor="#673AB7"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -75,7 +79,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
         app:cardElevation="20dp"
-        app:cardUseCompatPadding="true" >
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:id="@+id/ll_gender"
@@ -92,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/pencil"
                 android:drawablePadding="30dp"
-                android:text="Female"
                 android:textColor="#673AB7"
                 android:textSize="20sp" />
 
@@ -121,7 +124,6 @@
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/pencil"
                 android:drawablePadding="30dp"
-                android:text="20"
                 android:textColor="#673AB7"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -146,7 +148,9 @@
                 android:id="@+id/btn_signout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sign out" />
+                android:text="sign out"
+                android:textSize="18sp"
+                />
         </LinearLayout>
     </LinearLayout>
 

@@ -86,7 +86,7 @@ public class UserFragment extends Fragment {
 
         tvGender.setText(genderArray[sharedPref.getInt(SP_GENDER, 0)]);
 
-        DocumentReference documentReference = db.collection("users").document(userId).collection("UserDetails").document(date);
+        DocumentReference documentReference = db.collection("users").document(userId);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -118,10 +118,58 @@ public class UserFragment extends Fragment {
             }
         });
 
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                tvName.setText(value.getString("Username"));
+                tvAge.setText(value.getString("Age"));
+                tvGender.setText(value.getString("Gender"));
+                //gender = values.getString("Gender");
+
+            }
+        });
+
 
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+                builder.setTitle("Enter your username");
+
+
+                final EditText input = new EditText(getActivity());
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        if (!input.getText().toString().isEmpty()) {
+
+                            documentReference.update("Username", input.getText().toString());
+                        } else {
+                            dialog.cancel();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
 
             }
         });
@@ -168,19 +216,6 @@ public class UserFragment extends Fragment {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         builder.setTitle("Select your gender");
 
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    return;
-                }
-
-                tvGender.setText(value.getString("Gender"));
-                //gender = values.getString("Gender");
-
-            }
-        });
-
         builder.setSingleChoiceItems(genderArray, sharedPref.getInt(SP_GENDER, 0), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
@@ -209,7 +244,7 @@ public class UserFragment extends Fragment {
     }
 
     private void EnterUserAge() {
-        DocumentReference documentReference = db.collection("users").document(userId);
+            DocumentReference documentReference = db.collection("users").document(userId);
 
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
             builder.setTitle("Enter your Age");
@@ -218,19 +253,6 @@ public class UserFragment extends Fragment {
 
             input.setInputType(InputType.TYPE_CLASS_NUMBER);
             builder.setView(input);
-
-            documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        return;
-                    }
-
-                    tvAge.setText(value.getString("Age"));
-                    //gender = values.getString("Gender");
-                    //hi
-                }
-            });
 
 
             builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
