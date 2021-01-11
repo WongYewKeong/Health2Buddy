@@ -256,6 +256,7 @@ public class NutritionFragment extends Fragment {
         documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d("Debug", "Nutrition Check if document exists");
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -273,14 +274,17 @@ public class NutritionFragment extends Fragment {
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Log.d("Debug", "Nutrition Read Nutrition data");
                 try {
-                    consumedCal = Double.parseDouble(value.getString("consumedCal"));
-                    consumedCarbs = Double.parseDouble(value.getString("consumedCarbs"));
-                    consumedFat = Double.parseDouble(value.getString("consumedFat"));
-                    consumedProtein = Double.parseDouble(value.getString("consumedProtein"));
-                    displayNutritionData();
+                    if(value.getString("consumedCal")!=null){
+                        consumedCal = Double.parseDouble(value.getString("consumedCal"));
+                        consumedCarbs = Double.parseDouble(value.getString("consumedCarbs"));
+                        consumedFat = Double.parseDouble(value.getString("consumedFat"));
+                        consumedProtein = Double.parseDouble(value.getString("consumedProtein"));
+                        displayNutritionData();
+                    }
                 } catch (NullPointerException e) {
-                    Log.d("Debug", "Nutrition:" + e.getMessage());
+                    Log.d("Debug", "get Nutrition:" + e.getMessage());
                 }
             }
         });
@@ -316,7 +320,7 @@ public class NutritionFragment extends Fragment {
                     
                     showDataInListView();
                 } catch (NullPointerException e) {
-                    Log.d("Debug", "Nutrition: " + e.getMessage());
+                    Log.d("Debug", "get Consumed Food " + e.getMessage());
                 }
                 
                 
