@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.login.LoginManager;
@@ -46,7 +45,7 @@ public class UserFragment extends Fragment {
 
     LinearLayout ll_userage, ll_usergender;
 
-    TextView tvName,tvAge,tvGender;
+    TextView tvName,tvAge,tvGender,tvemail;
     ImageView profile;
     FirebaseFirestore db;
 
@@ -76,6 +75,8 @@ public class UserFragment extends Fragment {
         profile=root.findViewById(R.id.im_profile);
         ll_userage = root.findViewById(R.id.ll_age);
         ll_usergender = root.findViewById(R.id.ll_gender);
+        tvemail=root.findViewById(R.id.tv_email);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -129,6 +130,8 @@ public class UserFragment extends Fragment {
                 tvAge.setText(value.getString("Age"));
                 tvGender.setText(value.getString("Gender"));
                 //gender = values.getString("Gender");
+                tvemail.setText(value.getString("Email"));
+
 
             }
         });
