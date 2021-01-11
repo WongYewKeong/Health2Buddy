@@ -71,7 +71,7 @@ public class NutritionFragment extends Fragment {
     
     // Get from firestore
     private double weight, height;
-    private int age;
+    private double age;
     private String gender;
     
     // Others
@@ -242,12 +242,8 @@ public class NutritionFragment extends Fragment {
                     weight = Double.parseDouble(value.getString("Weight"));
                     height = Double.parseDouble(value.getString("Height"));
                     
-                    //age = Integer.parseInt(value.getString("Age"));
-                    //gender = value.getString("Gender");
-                    
-                    // Waiting Mai firestore
-                    age = 50;
-                    gender = "Male";
+                    age = Double.parseDouble(value.getString("Age"));
+                    gender = value.getString("Gender");
                     
                     calculateNeededNutrition();
                 } catch (NullPointerException e) {
@@ -260,6 +256,7 @@ public class NutritionFragment extends Fragment {
         documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d("Debug", "Nutrition Check if document exists");
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -277,14 +274,17 @@ public class NutritionFragment extends Fragment {
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Log.d("Debug", "Nutrition Read Nutrition data");
                 try {
-                    consumedCal = Double.parseDouble(value.getString("consumedCal"));
-                    consumedCarbs = Double.parseDouble(value.getString("consumedCarbs"));
-                    consumedFat = Double.parseDouble(value.getString("consumedFat"));
-                    consumedProtein = Double.parseDouble(value.getString("consumedProtein"));
-                    displayNutritionData();
+                    if(value.getString("consumedCal")!=null){
+                        consumedCal = Double.parseDouble(value.getString("consumedCal"));
+                        consumedCarbs = Double.parseDouble(value.getString("consumedCarbs"));
+                        consumedFat = Double.parseDouble(value.getString("consumedFat"));
+                        consumedProtein = Double.parseDouble(value.getString("consumedProtein"));
+                        displayNutritionData();
+                    }
                 } catch (NullPointerException e) {
-                    Log.d("Debug", "Nutrition:" + e.getMessage());
+                    Log.d("Debug", "get Nutrition:" + e.getMessage());
                 }
             }
         });
@@ -320,7 +320,7 @@ public class NutritionFragment extends Fragment {
                     
                     showDataInListView();
                 } catch (NullPointerException e) {
-                    Log.d("Debug", "Nutrition: " + e.getMessage());
+                    Log.d("Debug", "get Consumed Food " + e.getMessage());
                 }
                 
                 
@@ -339,7 +339,7 @@ public class NutritionFragment extends Fragment {
     
     private void calculateNeededNutrition() {
         // Execute if all required data provided
-        if (!TextUtils.isEmpty(gender) && weight > 0 && height > 0 && age > 0) {
+        if (!gender.equals("") && weight > 0 && height > 0 && age > 0) {
             // Calculate REE, REE is the amount of calories you burn if you lie motionless in bed all day.
             if (gender.equals("Male")) {
                 REE = 66 + (13.7 * weight) + (5.0 * height) - (6.8 * age);

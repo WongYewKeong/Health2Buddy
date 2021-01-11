@@ -63,7 +63,7 @@
                     android:layout_height="275dp"
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
-
+                    android:tooltipText="Overall Plan"
                     android:scaleType="center"
                     android:src="@drawable/overalll" />
 
@@ -89,6 +89,7 @@
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
                     android:scaleType="center"
+                    android:tooltipText="Focused Plan"
                     android:src="@drawable/focused" />
 
             </androidx.cardview.widget.CardView>
@@ -116,6 +117,7 @@
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
                     android:scaleType="center"
+                    android:tooltipText="Advanced Plan"
                     android:src="@drawable/advanced" />
 
             </androidx.cardview.widget.CardView>
@@ -140,6 +142,7 @@
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
+                    android:tooltipText="Custom Timer"
                     android:src="@drawable/timer" />
 
             </androidx.cardview.widget.CardView>

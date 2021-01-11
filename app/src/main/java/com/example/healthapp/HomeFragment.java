@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private Sensor stepcounter;
     private boolean isSensorPresent;
     private Button btnEditWeight, btnEditHeight, btnEditGoal, btnRecordStepsCount;
-    int stepCount = 0;
+    int stepCount ;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
     int weightnum, goalnum;
@@ -296,6 +296,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Log.d("Debug", "Check if document exists");
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -312,21 +313,26 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         documentReference2.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Log.d("Debug", "Read Steps Count");
+                //Log.d("Debug", "StepCount: "+value.getString("stepCount"));
                 try {
-                    //stepCount = Integer.parseInt(value.getString("stepCount"));
-                    stepcount.setText(value.getString("stepCount"));
-                    if (goalnum == 0) {
-                        goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
-                    } else if (Integer.parseInt(value.getString("stepCount")) < goalnum) {
-                        goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
-                    } else if (Integer.parseInt(value.getString("stepCount")) >= goalnum) {
-                        goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                    if(value.getString("stepCount")!=null){
+                        stepCount = Integer.parseInt(value.getString("stepCount"));
+                        stepcount.setText(value.getString("stepCount"));
+                        if (goalnum == 0) {
+                            goalnotification.setText("You have not set your goal of steps count today. Please set your goal below.");
+                        } else if (Integer.parseInt(value.getString("stepCount")) < goalnum) {
+                            goalnotification.setText("Unfortunately, you have not reach your goal of steps count. Try harder.");
+                        } else if (Integer.parseInt(value.getString("stepCount")) >= goalnum) {
+                            goalnotification.setText("Congratulation! You have reached your goal of steps count!");
+                        }
+                        int cal = (int) ((Double.parseDouble(value.getString("stepCount"))) * 0.045);
+                        calories.setText(String.valueOf(cal) + " calories");
+                        int feet = (int) ((Double.parseDouble(value.getString("stepCount"))) * 2.5);
+                        String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
+                        distance.setText(finaldistance + " km");
                     }
-                    int cal = (int) ((Double.parseDouble(value.getString("stepCount"))) * 0.045);
-                    calories.setText(String.valueOf(cal) + " calories");
-                    int feet = (int) ((Double.parseDouble(value.getString("stepCount"))) * 2.5);
-                    String finaldistance = String.format("%.2f", feet / 3.281 / 1000);
-                    distance.setText(finaldistance + " km");
+                    
                     //onSensorChanged();
                 } catch (NullPointerException e) {
                     Log.d("Debug", e.getMessage());
@@ -354,7 +360,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor == stepcounter && isAdded()) {
             
-            stepCount = numstep++;
+            //stepCount = numstep++;
+            stepCount++;
             DocumentReference documentReference2 = db.collection("users").document(userId).collection("dailyStep").document(date);
             
             documentReference2.update("stepCount", String.valueOf(stepCount));
@@ -392,6 +399,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         //Create the FireStore document for today record
         Map<String, Object> totalstepcount = new HashMap<>();
         totalstepcount.put("stepCount", "0");
+        Log.d("Debug", "Document Created");
         
         db.collection("users").document(userId).collection("dailyStep").document(date).set(totalstepcount);
     }
