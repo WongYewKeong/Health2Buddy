@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthApp">
-        <activity android:name=".StepsCountRecord"></activity>
+        <activity android:name=".StepsCountRecord"
+            android:label="Steps Count Record"/>
         <activity
             android:name=".HistoryActivity"
             android:label="History" />
