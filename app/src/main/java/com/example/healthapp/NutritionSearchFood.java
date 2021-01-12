@@ -86,7 +86,7 @@ public class NutritionSearchFood extends AppCompatActivity {
                     food_list.clear();
                     String food = query;
                     food = food.replace(" ", "");
-                    String f_url = "https://api.nutritionix.com/v1_1/search/" + food + "?results=0%3A20&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id%2Citem_description%2Cnf_protein%2Cnf_calories%2Cnf_total_carbohydrate%2Cnf_total_fat%2Cnf_serving_size_qty&appId=42e8cbe9&appKey=a4e373fe0f10ab1de40cffbffb9db544";
+                    String f_url = "https://api.nutritionix.com/v1_1/search/" + food + "?results=0:20&fields=item_name,brand_name,item_id,nf_calories,nf_total_carbohydrate,nf_total_fat,nf_protein&appId=60a71170&appKey=b5e07b91274873a936b6099c165e4b15";
                     getResult(f_url);
                     notifyDataChanged();
                     return false;
