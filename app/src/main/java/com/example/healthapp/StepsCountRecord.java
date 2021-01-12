@@ -1,6 +1,7 @@
 package com.example.healthapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,26 +70,31 @@ public class StepsCountRecord extends AppCompatActivity {
         db.collection("users").document(userId).collection("dailyStep").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                //Clear the stepsArray
-                stepsArray.clear();
+                try {
+                    //Clear the stepsArray
+                    stepsArray.clear();
 
-                // This value return a list of document, now we use for loop to access them 1 by 1
-                for (QueryDocumentSnapshot doc : value) {
+                    // This value return a list of document, now we use for loop to access them 1 by 1
+                    for (QueryDocumentSnapshot doc : value) {
 
-                    // The doc is take from the list, it is a Hashmap.
-                    Map<String, Object> stepsCountHM = doc.getData();
+                        // The doc is take from the list, it is a Hashmap.
+                        Map<String, Object> stepsCountHM = doc.getData();
 
-                    String stepInfor;
+                        String stepInfor;
 
-                    stepInfor = "Date: " + doc.getId() +
-                            "\nSteps Count: " + stepsCountHM.get("stepCount").toString();
+                        stepInfor = "Date: " + doc.getId() +
+                                "\nSteps Count: " + stepsCountHM.get("stepCount").toString();
 
-                    stepsArray.add(stepInfor);
-            }
-                showDataInListView();
+                        stepsArray.add(stepInfor);
+                    }
+                    showDataInListView();
+                } catch (NullPointerException e) {
+                    Log.d("Debug", "get Steps Count " + e.getMessage());
+                }
             }
         });
     }
+
 
     public void showDataInListView(){
 
